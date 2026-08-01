@@ -1,176 +1,361 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { 
-  User, 
-  Settings, 
-  CreditCard, 
-  LogOut, 
-  LayoutDashboard, 
-  Wrench, 
-  Calendar, 
-  Bell, 
-  Menu, 
+import { useState } from 'react';
+import Link from 'next/link';
+import {
+  Menu,
   X,
-  ShieldCheck
-} from "lucide-react"
+  Settings,
+  LogOut,
+  Home,
+  BarChart3,
+  FileText,
+  HelpCircle,
+  ChevronDown,
+  User,
+  Mail,
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { usePathname } from 'next/navigation';
 
-const Navbar=()=> {
-  const [isOpen, setIsOpen] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+const navItems = [
+  { label: 'Home', href: '/', icon: Home },
+  { label: 'Dashboard', href: '/dashboard', icon: BarChart3 },
+  { label: 'Analytics', href: '/analytics', icon: FileText },
+  { label: 'Resources', href: '/resources', icon: HelpCircle },
+];
+
+export default function Navbar() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const pathname=usePathname()
+  const hiddenPaths = ["/auth/login", "/auth/register"];
+
+  if (hiddenPaths.some((path) => pathname.startsWith(path))) {
+    return null;
+  }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          
-          {/* Left: Brand Logo */}
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/25 border border-white/10">
-              🔧
+    <>
+      {/* Desktop Navbar */}
+      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50">
+        <div className="backdrop-blur-2xl bg-gradient-to-b from-white/15 to-white/10 dark:from-slate-900/20 dark:to-slate-900/10 border-b border-white/20 dark:border-white/15 shadow-xl">
+          <div className="max-w-7xl mx-auto px-6 h-16  flex items-center justify-between">
+            {/* Logo */}
+       <Link
+  href="/"
+  className="
+    flex items-center gap-4 flex-shrink-0
+    rounded-2xl
+    group
+    transition-all duration-300
+    hover:scale-105
+  "
+>
+  <div
+    className="
+      w-12 h-12
+      rounded-4xl
+      bg-gradient-to-br
+      from-emerald-400
+      via-emerald-500
+      to-emerald-700
+      flex items-center justify-center
+      text-white
+      font-black
+      text-2xl
+      shadow-xl
+      shadow-emerald-500/40
+      border
+      border-emerald-300/20
+    "
+  >
+    F
+  </div>
+
+  <div>
+    <span className="
+      text-xl
+      font-extrabold
+      tracking-tight
+      text-foreground
+      block
+    ">
+      FixItNow
+    </span>
+
+    <span className="
+      text-[10px]
+      uppercase
+      tracking-[0.25em]
+      text-emerald-500
+      font-bold
+    ">
+      Service Hub
+    </span>
+  </div>
+</Link>
+
+            {/* Centered Navigation */}
+            <div className="flex-1 flex justify-center px-8">
+              <div className="flex items-center gap-1 bg-white/5 dark:bg-white/5 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/15 dark:border-white/10 shadow-lg">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium text-foreground/70 hover:text-foreground hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-200 group"
+                    >
+                      <Icon className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+
+            {/* Right Side - Profile Dropdown */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="group flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-white/10 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+                  >
+                    <Avatar className="h-8 w-8 border-2 border-emerald-500/30 group-hover:border-emerald-500 transition-colors">
+                      <AvatarImage
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=fixitnow"
+                        alt="User avatar"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-emerald-400 to-emerald-600 text-white text-sm font-bold">
+                        FN
+                      </AvatarFallback>
+                    </Avatar>
+                    <ChevronDown className="w-4 h-4 text-foreground/60 group-data-[state=open]:rotate-180 transition-transform" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-56 backdrop-blur-xl bg-white/95 dark:bg-slate-950/95 border border-white/20 dark:border-white/10 rounded-xl shadow-2xl"
+                >
+                  {/* User Info Header */}
+                  <div className="px-4 py-3 bg-gradient-to-r from-emerald-500/10 to-emerald-400/5 dark:from-emerald-500/20 dark:to-emerald-400/10 rounded-t-lg border-b border-white/10">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10 border-2 border-emerald-500">
+                        <AvatarImage
+                          src="https://api.dicebear.com/7.x/avataaars/svg?seed=fixitnow"
+                          alt="User"
+                        />
+                        <AvatarFallback className="bg-gradient-to-br from-emerald-400 to-emerald-600 text-white text-sm font-bold">
+                          FN
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-foreground">
+                          Alex Developer
+                        </p>
+                        <p className="text-xs text-foreground/60 truncate">
+                          alex@fixitnow.com
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <DropdownMenuSeparator className="bg-white/10 dark:bg-white/10" />
+
+                  {/* Profile Section */}
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-xs font-semibold text-foreground/50 uppercase tracking-wide px-4 py-2">
+                      Account
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-emerald-500/20 dark:hover:bg-emerald-500/10 transition-colors text-foreground/80 hover:text-foreground">
+                      <User className="w-4 h-4" />
+                      <span>My Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-emerald-500/20 dark:hover:bg-emerald-500/10 transition-colors text-foreground/80 hover:text-foreground">
+                      <Mail className="w-4 h-4" />
+                      <span>Messages</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuSeparator className="bg-white/10 dark:bg-white/10" />
+
+                  {/* Settings Section */}
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-xs font-semibold text-foreground/50 uppercase tracking-wide px-4 py-2">
+                      Settings
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-blue-500/20 dark:hover:bg-blue-500/10 transition-colors text-foreground/80 hover:text-foreground">
+                      <Settings className="w-4 h-4" />
+                      <span>Preferences</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-blue-500/20 dark:hover:bg-blue-500/10 transition-colors text-foreground/80 hover:text-foreground">
+                      <HelpCircle className="w-4 h-4" />
+                      <span>Help & Support</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuSeparator className="bg-white/10 dark:bg-white/10" />
+
+                  {/* Sign Out */}
+                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2.5 rounded-lg hover:bg-red-500/20 dark:hover:bg-red-500/10 transition-colors text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium m-2 mt-1 mb-0">
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Navbar */}
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50">
+        <div className="backdrop-blur-2xl bg-gradient-to-b from-white/15 to-white/10 dark:from-slate-900/20 dark:to-slate-900/10 border-b border-white/20 dark:border-white/15 shadow-xl">
+          <div className="px-4 h-14 flex items-center justify-between">
+            {/* Mobile Logo */}
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-700 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-emerald-500/30">
+                F
+              </div>
+              <span className="text-sm font-semibold text-foreground">
                 FixItNow
               </span>
-              <span className="text-[10px] text-emerald-500 font-semibold uppercase tracking-widest">
-                Service Hub
-              </span>
-            </div>
-          </div>
+            </Link>
 
-          {/* Center: Navigation Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-1 bg-muted/30 p-1.5 rounded-full border border-border/50 backdrop-blur-md">
-            <a 
-              href="#" 
-              className="px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-full bg-background text-foreground shadow-sm transition-all"
-            >
-              Dashboard
-            </a>
-            <a 
-              href="#" 
-              className="px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-            >
-              Bookings
-            </a>
-            <a 
-              href="#" 
-              className="px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-            >
-              Services
-            </a>
-            <a 
-              href="#" 
-              className="px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all"
-            >
-              Support
-            </a>
-          </nav>
-
-          {/* Right Side: Actions & Profile Dropdown */}
-          <div className="hidden md:flex items-center gap-4">
-            {/* Notification Bell */}
-            <button className="relative p-2.5 rounded-xl bg-muted/40 hover:bg-muted border border-border/60 text-muted-foreground hover:text-foreground transition-all">
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-emerald-500"></span>
-            </button>
-
-            {/* Profile Dropdown Container */}
-            <div className="relative">
-              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-3 p-1.5 pl-3 rounded-2xl bg-card border border-border/80 hover:border-emerald-500/50 shadow-sm transition-all group"
-              >
-                <div className="flex flex-col text-right">
-                  <span className="text-xs font-bold text-foreground">Marcus Vance</span>
-                  <span className="text-[10px] text-emerald-500 font-medium">Verified Client</span>
-                </div>
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-500 font-bold text-sm group-hover:scale-105 transition-transform">
-                  MV
-                </div>
-              </button>
-
-              {/* Dropdown Menu */}
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-3 w-64 rounded-3xl bg-card/95 border border-border/80 shadow-2xl backdrop-blur-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
-                  <div className="p-3 border-b border-border/60 mb-1">
-                    <p className="text-xs font-medium text-muted-foreground">Signed in as</p>
-                    <p className="text-sm font-bold text-foreground truncate">marcus.vance@example.com</p>
+            <div className="flex items-center gap-2">
+              {/* Mobile Profile Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="p-1.5 rounded-lg hover:bg-white/10 dark:hover:bg-white/10 transition-colors"
+                  >
+                    <Avatar className="h-7 w-7 border-2 border-emerald-500/30">
+                      <AvatarImage
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=fixitnow"
+                        alt="User avatar"
+                      />
+                      <AvatarFallback className="bg-gradient-to-br from-emerald-400 to-emerald-600 text-white text-xs font-bold">
+                        FN
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="w-52 backdrop-blur-xl bg-white/95 dark:bg-slate-950/95 border border-white/20 dark:border-white/10 rounded-xl shadow-2xl"
+                >
+                  {/* User Info */}
+                  <div className="px-4 py-3 bg-gradient-to-r from-emerald-500/10 to-emerald-400/5 dark:from-emerald-500/20 dark:to-emerald-400/10 rounded-t-lg border-b border-white/10">
+                    <p className="text-sm font-semibold text-foreground">
+                      Alex Developer
+                    </p>
+                    <p className="text-xs text-foreground/60">alex@fixitnow.com</p>
                   </div>
 
-                  <div className="space-y-1">
-                    <a href="#" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all">
-                      <User className="h-4 w-4 text-emerald-500" />
-                      Profile Settings
-                    </a>
-                    <a href="#" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all">
-                      <Calendar className="h-4 w-4 text-emerald-500" />
-                      My Bookings
-                    </a>
-                    <a href="#" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all">
-                      <CreditCard className="h-4 w-4 text-emerald-500" />
-                      Billing & Payments
-                    </a>
-                    <a href="#" className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-all">
-                      <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                      Security & RBAC
-                    </a>
+                  <DropdownMenuSeparator className="bg-white/10" />
+
+                  {/* Quick Actions */}
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="text-xs font-semibold text-foreground/50 uppercase tracking-wide px-4 py-2">
+                      Account
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                      <User className="w-4 h-4" />
+                      <span>My Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      <span>Settings</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+
+                  <DropdownMenuSeparator className="bg-white/10" />
+
+                  <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600 dark:text-red-400 font-medium">
+                    <LogOut className="w-4 h-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Mobile Menu Drawer */}
+              <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <SheetTrigger asChild>
+                  <button
+                    type="button"
+                    className="p-1.5 rounded-lg hover:bg-white/10 dark:hover:bg-white/10 transition-colors"
+                  >
+                    <Menu className="w-5 h-5 text-foreground" />
+                  </button>
+                </SheetTrigger>
+                <SheetContent
+                  side="right"
+                  className="w-64 backdrop-blur-xl bg-white/95 dark:bg-slate-950/95 border-l border-white/20 dark:border-white/10"
+                >
+                  <div className="flex flex-col gap-6 pt-8">
+                    {/* Navigation */}
+                    <div className="space-y-2">
+                      <h3 className="text-xs font-semibold text-foreground/50 uppercase tracking-wide px-2">
+                        Navigation
+                      </h3>
+                      {navItems.map((item) => {
+                        const Icon = item.icon;
+                        return (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setIsDrawerOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground/80 hover:text-foreground hover:bg-emerald-500/20 dark:hover:bg-emerald-500/10 transition-all duration-200"
+                          >
+                            <Icon className="w-5 h-5" />
+                            <span className="font-medium">{item.label}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+
+                    {/* Resources */}
+                    <div className="space-y-2 border-t border-white/10 pt-4">
+                      <h3 className="text-xs font-semibold text-foreground/50 uppercase tracking-wide px-2">
+                        Resources
+                      </h3>
+                      <Link
+                        href="#"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground/80 hover:text-foreground hover:bg-blue-500/20 dark:hover:bg-blue-500/10 transition-colors"
+                      >
+                        <HelpCircle className="w-5 h-5" />
+                        <span>Documentation</span>
+                      </Link>
+                      <Link
+                        href="#"
+                        className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground/80 hover:text-foreground hover:bg-blue-500/20 dark:hover:bg-blue-500/10 transition-colors"
+                      >
+                        <Settings className="w-5 h-5" />
+                        <span>Settings</span>
+                      </Link>
+                    </div>
                   </div>
-
-                  <div className="border-t border-border/60 my-1 pt-1">
-                    <button className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-500 hover:bg-red-500/10 transition-all">
-                      <LogOut className="h-4 w-4" />
-                      Sign Out
-                    </button>
-                  </div>
-                </div>
-              )}
+                </SheetContent>
+              </Sheet>
             </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2.5 rounded-xl bg-muted/40 border border-border/60 text-foreground"
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      {isOpen && (
-        <div className="md:hidden border-t border-border/40 bg-card/95 backdrop-blur-2xl p-6 space-y-5 animate-in slide-in-from-top-4">
-          <div className="flex items-center gap-3 pb-4 border-b border-border/40">
-            <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-500 font-bold">
-              MV
-            </div>
-            <div>
-              <h4 className="font-bold text-sm">Marcus Vance</h4>
-              <p className="text-xs text-muted-foreground">marcus.vance@example.com</p>
-            </div>
-          </div>
-
-          <nav className="grid gap-2">
-            <a href="#" className="px-4 py-3 rounded-xl bg-muted/50 font-semibold text-sm">Dashboard</a>
-            <a href="#" className="px-4 py-3 rounded-xl hover:bg-muted/50 font-semibold text-sm text-muted-foreground">Bookings</a>
-            <a href="#" className="px-4 py-3 rounded-xl hover:bg-muted/50 font-semibold text-sm text-muted-foreground">Services</a>
-            <a href="#" className="px-4 py-3 rounded-xl hover:bg-muted/50 font-semibold text-sm text-muted-foreground">Settings</a>
-          </nav>
-
-          <div className="pt-4 border-t border-border/40">
-            <button className="w-full py-3 rounded-xl bg-red-500/10 text-red-500 font-semibold text-sm text-center">
-              Sign Out
-            </button>
           </div>
         </div>
-      )}
-    </header>
-  )
+      </nav>
+
+      {/* Padding for fixed navbar */}
+      <div className="h-16 md:h-16" />
+    </>
+  );
 }
-
-export default Navbar
