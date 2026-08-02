@@ -42,7 +42,7 @@ const navItems = [
 export default function Navbar() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const pathname=usePathname()
-  const hiddenPaths = ["/auth/login", "/auth/register"];
+  const hiddenPaths = ["/auth/login", "/auth/register",'/dashboard'];
 
   if (hiddenPaths.some((path) => pathname.startsWith(path))) {
     return null;

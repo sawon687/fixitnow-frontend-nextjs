@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from 'react'
+
 export type TState={
     success:boolean,
     message:string,
@@ -6,4 +8,12 @@ export type TState={
         acccessToken:string,
         refreshToken:string,
     }
+}
+
+export type DashboardNavbarProps = {
+  setIsCollapsed?: Dispatch<SetStateAction<boolean>>
+  isCollapsed: boolean
+  setIsMobileOpen: Dispatch<SetStateAction<boolean>>
+  isMobileOpen?:boolean
+
 }
