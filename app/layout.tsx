@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import Navbar from '../components/shared/Navbar';
+import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 
-const ibmPlexSans = IBM_Plex_Sans({subsets:['latin'],variable:'--font-sans'});
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +35,28 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", ibmPlexSans.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-sans",
+        ibmPlexSans.variable
+      )}
+      suppressHydrationWarning
     >
-      <Navbar></Navbar>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+        >
+          <Navbar />
+          <Toaster position="bottom-right" richColors />
+          {children}
+          <Footer />
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -4,7 +4,7 @@ import { Button } from '../../../components/ui/button'
 
 const LoginPage = () => {
   return (
-    <div className='flex justify-center items-center min-h-screen'>
+    <div className='flex justify-center items-center '>
 <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 bg-background">
       {/* Left Column: Modernized Form Section */}
       <div className="flex items-center justify-center py-12 px-6 sm:px-10 lg:px-16 relative overflow-hidden">

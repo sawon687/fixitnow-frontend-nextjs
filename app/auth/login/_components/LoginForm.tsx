@@ -3,11 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowRight, Lock, Mail } from "lucide-react";
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { loginAction } from '../_action/loginAction';
+import { toast } from 'sonner';
 
 const LoginDualLayout = () => {
-   const[stack,action,pending]=useActionState(loginAction,false)
+   const[stack,action,pending]=useActionState(loginAction,'')
+   console.log(stack,'stack')
+   useEffect(() => {
+    if (!stack) return;
+
+    if (stack.success) {
+      toast.success(stack.message);
+    }
+    if (!stack.success) {
+      toast.error(stack.errormessage);
+    }
+  }, [stack]);
   return (
          <form action={action} className="grid gap-4">
               <div className="grid gap-2">

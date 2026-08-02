@@ -14,6 +14,10 @@ import {
   ChevronDown,
   User,
   Mail,
+  Wrench,
+  UserCog,
+  LayoutDashboard,
+  LayoutDashboardIcon,
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -30,9 +34,9 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { label: 'Home', href: '/', icon: Home },
-  { label: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-  { label: 'Analytics', href: '/analytics', icon: FileText },
-  { label: 'Resources', href: '/resources', icon: HelpCircle },
+  { label: 'Services', href: '/service', icon:Wrench },
+  { label: 'Technicians', href: '/technicians', icon:  UserCog },
+  { label: 'Contact', href: '/contact', icon: HelpCircle },
 ];
 
 export default function Navbar() {
@@ -51,59 +55,17 @@ export default function Navbar() {
         <div className="backdrop-blur-2xl bg-gradient-to-b from-white/15 to-white/10 dark:from-slate-900/20 dark:to-slate-900/10 border-b border-white/20 dark:border-white/15 shadow-xl">
           <div className="max-w-7xl mx-auto px-6 h-16  flex items-center justify-between">
             {/* Logo */}
-       <Link
-  href="/"
-  className="
-    flex items-center gap-4 flex-shrink-0
-    rounded-2xl
-    group
-    transition-all duration-300
-    hover:scale-105
-  "
->
-  <div
-    className="
-      w-12 h-12
-      rounded-4xl
-      bg-gradient-to-br
-      from-emerald-400
-      via-emerald-500
-      to-emerald-700
-      flex items-center justify-center
-      text-white
-      font-black
-      text-2xl
-      shadow-xl
-      shadow-emerald-500/40
-      border
-      border-emerald-300/20
-    "
-  >
-    F
-  </div>
-
-  <div>
-    <span className="
-      text-xl
-      font-extrabold
-      tracking-tight
-      text-foreground
-      block
-    ">
-      FixItNow
-    </span>
-
-    <span className="
-      text-[10px]
-      uppercase
-      tracking-[0.25em]
-      text-emerald-500
-      font-bold
-    ">
-      Service Hub
-    </span>
-  </div>
-</Link>
+       <Link href="/" className="flex items-center gap-2 group">
+            <div 
+            className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500  
+            rounded-[12px] group-hover:shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300">
+              <Wrench className="w-6 h-6 text-white" />
+            </div>
+            <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-cyan-600 
+            bg-clip-text text-transparent hidden sm:inline">
+              FixItNow
+            </span>
+          </Link>
 
             {/* Centered Navigation */}
             <div className="flex-1 flex justify-center px-8">
@@ -182,10 +144,12 @@ export default function Navbar() {
                       <User className="w-4 h-4" />
                       <span>My Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-emerald-500/20 dark:hover:bg-emerald-500/10 transition-colors text-foreground/80 hover:text-foreground">
-                      <Mail className="w-4 h-4" />
-                      <span>Messages</span>
+                    <Link href={'/dashboard'}>
+                     <DropdownMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-emerald-500/20 dark:hover:bg-emerald-500/10 transition-colors text-foreground/80 hover:text-foreground">
+                      <LayoutDashboardIcon className="w-4 h-4" />
+                      <span>Dashboard</span>
                     </DropdownMenuItem>
+                    </Link>
                   </DropdownMenuGroup>
 
                   <DropdownMenuSeparator className="bg-white/10 dark:bg-white/10" />
