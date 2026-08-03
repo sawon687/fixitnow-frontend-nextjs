@@ -36,19 +36,24 @@ export const loginAction = async (prevState:TState,fromdata: FormData) => {
   }
 
 
-
+ console.log(result)
+ console.log(result.data.accessToken,'refrshtoken',result.data.refreshToken)
 
        const cookieStore=await cookies()
-       const cookieaccess=cookieStore.set('accessToken',result.accessToken,{
+       const cookieaccess=cookieStore.set('accessToken',result.data.accessToken,{
             httpOnly:true,
             sameSite:"lax",
-            maxAge:1000 * 60 * 60 * 24 // 24 hour or 1 day
+            maxAge: 60 * 60 * 24 // 24 hour or 1 day
        })
-       const cookieRefress=cookieStore.set('refreshToken',result.refreshToken,{
+       console.log(cookieaccess)
+       const cookieRefress=cookieStore.set('refreshToken',result.data.refreshToken,{
               httpOnly:true,
             sameSite:"lax",
-            maxAge:1000 * 60 * 60 * 24 * 7// 24 hour or 7 day
+            maxAge:60 * 60 * 24 * 7// 24 hour or 7 day
        })
+      
+        console.log(cookieStore.get("accessToken"));
+  console.log(cookieStore.get("refreshToken"));
 
        redirect('/dashboard')
 

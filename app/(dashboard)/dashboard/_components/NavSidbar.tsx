@@ -15,6 +15,7 @@ import {
   X,
   CreditCard,
   Clock,
+  Layers,
 } from "lucide-react";
 
 import { DashboardNavbarProps } from "../../../../utils/type";
@@ -40,6 +41,11 @@ const navlink = {
       name: "Categories",
       path: "/dashboard/admin/categories",
       icon: Tags,
+    },
+     {
+      name: "Add Categories",
+      path: "/dashboard/admin/categories/create-categrie",
+      icon: Layers,
     },
     {
       name: "Services",

@@ -1,5 +1,7 @@
 "use server"
 
+import { cookies } from "next/headers"
+
 export async function updateProfile(state:any, formData: FormData) {
 
   const location = formData.get("location") as string
@@ -18,12 +20,15 @@ export async function updateProfile(state:any, formData: FormData) {
     bio,
     skills
   }
-
+ const cookieStore = await cookies()
+ const accessToken = cookieStore.get("accessToken")?.value
    const res = await fetch(`${process.env.API_URL}/api/technician/profile`, {
     headers: {
       'Content-Type': 'application/json',
+         Authorization: `Bearer ${accessToken}`,
     },
     method: "PUT",
+    credentials:"include",
     body: JSON.stringify(payload),
   })
  
@@ -34,6 +39,26 @@ const result=await res.json()
     bio,
     skills
   })
-
+console.log(result,result)
   return result
+}
+
+
+export const getmeProfile=async()=>{
+
+ const cookieStore = await cookies()
+ const accessToken = cookieStore.get("accessToken")?.value
+    const res= await fetch(`${process.env.API_URL}/api/auth/me`, {
+      headers: {
+      'Content-Type': 'application/json',
+         Authorization: `Bearer ${accessToken}`,
+    },
+    method: 'GET',
+  
+  })
+
+       const result=  await res.json()
+       console.log('results data',result)
+  return result
+ 
 }
