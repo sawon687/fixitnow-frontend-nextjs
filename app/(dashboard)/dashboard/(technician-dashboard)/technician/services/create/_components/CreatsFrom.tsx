@@ -27,14 +27,12 @@ import {
 import { Sparkles, ArrowRight, Layers, Loader2 } from "lucide-react";
 
 import { toast } from "sonner";
+import { createService } from '../_actions/serviceActions';
+import { getCategre } from '../../../../../../../../commonService/getCategrie';
+import { Category } from '../../../../../../../../utils/type';
 
-import { createService, getCategre } from "./_actions/serviceActions";
 
-interface Category {
-  id: string;
-  name: string;
-  description?: string;
-}
+
 
 const initialState = {
   success: false,
