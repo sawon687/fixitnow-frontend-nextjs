@@ -34,20 +34,26 @@ export interface Category {
   createdAt: string;
 }
 
-export interface ServiceItem {
-  id: string;
-  technicianId: string;
-  categoryId: string;
-  title: string;
-  description: string;
-  price: number;
-  priceType: 'Fixed' | 'Hourly';
-  isActive: boolean;
-  createdAt: string;
+// export interface ServiceItem {
+//   id: string;
+//   technicianId: string;
+//   categoryId: string;
+//   title: string;
+//   description: string;
+//   price: number;
+//   priceType: 'Fixed' | 'Hourly';
+//   isActive: boolean;
+//   createdAt: string;
 
+// }
+
+export interface ISeachParmas{
+  category:string,
+  rating:string,
+  location:string,
+  price:string
+  search:string
 }
-
-
 export interface ICategory {
   id: string;
   name: string;

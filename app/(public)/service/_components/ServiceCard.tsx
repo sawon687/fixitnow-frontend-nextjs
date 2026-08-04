@@ -1,19 +1,21 @@
-import Link from 'next/link'
+ 'use client'
+ import Link from 'next/link'
 import { ArrowRight, MapPin, Star, Tag } from 'lucide-react'
 import { motion } from 'framer-motion'
 import React from 'react'
-import { ServiceItem } from '../../../../utils/type'
+import { IService} from '../../../../utils/type'
 
 
 
 
 type ServiceCardProps = {
-  service: ServiceItem
+  service:IService
   index?: number
 }
 
 const ServiceCard = ({ service, index = 0 }: ServiceCardProps) => {
   return (
+     <>
     <motion.div
       layout
       initial={{ opacity: 0, y: 15 }}
@@ -29,7 +31,8 @@ const ServiceCard = ({ service, index = 0 }: ServiceCardProps) => {
             <Tag className="w-3 h-3" /> {service.category.name}
           </span>
           <span className="flex items-center gap-1 text-amber-400 font-medium px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-xs">
-            <Star className="w-3 h-3 fill-amber-400" /> {service.rating} ({service.reviewsCount})
+            <Star className="w-3 h-3 fill-amber-400" /> 
+            {service.technician.avgRating}
           </span>
         </div>
 
@@ -42,7 +45,7 @@ const ServiceCard = ({ service, index = 0 }: ServiceCardProps) => {
         </p>
 
         <div className="flex items-center gap-1 text-slate-400 text-xs pt-1">
-          <MapPin className="w-3.5 h-3.5 text-emerald-400" /> {service.location}
+          <MapPin className="w-3.5 h-3.5 text-emerald-400" /> {service.technician.location}
         </div>
       </div>
 
@@ -67,6 +70,7 @@ const ServiceCard = ({ service, index = 0 }: ServiceCardProps) => {
 
       <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-3xl" />
     </motion.div>
+   </>
   )
 }
 

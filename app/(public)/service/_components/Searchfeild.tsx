@@ -3,7 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { motion } from "framer-motion";
 import { Search, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Searchfeild = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -11,14 +11,22 @@ const Searchfeild = () => {
   const [isPending, startTransition] = useTransition();
 
   const router = useRouter();
+  const searchparams=useSearchParams()
 
-  const handleSearch = () => {
-    if (!searchQuery.trim()) return;
+ const handleSearch = () => {
+  const params = new URLSearchParams(searchparams.toString());
 
-    startTransition(() => {
-      router.push(`/service?search=${encodeURIComponent(searchQuery)}`);
-    });
-  };
+  if (searchQuery.trim()) {
+    console.log('search',searchQuery)
+    params.set("search", searchQuery.trim());
+  } else {
+    params.delete("search");
+  }
+
+  startTransition(() => {
+    router.push(`/service?${params.toString()}`);
+  });
+};
 
   return (
     <motion.div

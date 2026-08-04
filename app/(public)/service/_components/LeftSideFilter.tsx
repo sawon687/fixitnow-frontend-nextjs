@@ -14,10 +14,10 @@ export const LeftSideFilter = ({
   locations,
   categoryNames,
 }: LeftSideFilterProps) => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedLocation, setSelectedLocation] = useState(locations[0] ?? "");
-  const [selectRating, setSelectRating] = useState(4.9);
-  const [maxPrice, setMaxPrice] = useState(2500);
+  const [selectRating, setSelectRating] = useState(0);
+  const [price, setPrice] = useState(0);
 
   const router = useRouter();
 
@@ -37,8 +37,8 @@ useEffect(() => {
     params.set("rating", selectRating.toString());
   }
 
-  if (maxPrice > 0) {
-    params.set("maxPrice", maxPrice.toString());
+  if (price > 0) {
+    params.set("price", price.toString());
   }
 
   router.push(`/service?${params.toString()}`);
@@ -46,7 +46,7 @@ useEffect(() => {
   selectedLocation,
   selectedCategory,
   selectRating,
-  maxPrice,
+  price,
   router,
 ]);
   return (
@@ -74,7 +74,7 @@ useEffect(() => {
             </label>
 
             <div className="space-y-1">
-              {categoryNames.map((category) => {
+              {['All',...categoryNames].map((category) => {
                 const isActive = selectedCategory === category;
 
                 return (
@@ -152,7 +152,7 @@ useEffect(() => {
               </span>
 
               <span className="text-emerald-400 font-bold">
-                ৳{maxPrice}
+                ৳{price}
               </span>
             </div>
 
@@ -161,8 +161,8 @@ useEffect(() => {
               min="500"
               max="3000"
               step="100"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
               className="w-full accent-emerald-500 cursor-pointer bg-slate-800 rounded-lg h-2"
             />
           </div>
