@@ -59,8 +59,21 @@ export interface ICategory {
   name: string;
   description?: string;
 }
-
-
+export enum IRole {
+  ADMIN = "ADMIN",
+  CUSTOMER = "CUSTOMER",
+  TECHNICIAN = "TECHNICIAN",
+}
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role:IRole
+  status: "UNBAN" | "BAN";
+  createdAt: string;
+  updatedAt: string;
+}
 
 export interface ITechnicianProfile {
   id: string;
@@ -72,6 +85,7 @@ export interface ITechnicianProfile {
   avgRating: number;
   createdAt: string;
   updatedAt: string; 
+  
 }
 export interface IService {
   id: string;

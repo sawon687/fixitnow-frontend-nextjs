@@ -135,18 +135,7 @@ export default async function ServicesPage({
         </div>
       </div>
 
-      {/* Marquee Animation Keyframes injected */}
-      {/* <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          display: flex;
-          width: max-content;
-          animation: marquee 25s linear infinite;
-        }
-      `}</style> */}
+   
     </div>
   );
 }

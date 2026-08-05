@@ -57,7 +57,7 @@ const ServiceCard = ({ service, index = 0 }: ServiceCardProps) => {
           </span>
         </div>
 
-        <Link href={`/services/${service.id}`}>
+        <Link href={`/service/${service.id}`}>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
