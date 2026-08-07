@@ -1,6 +1,20 @@
 'use server'
-export const  bookingCreate=async()=>{
 
+
+
+export const  bookingCreate=async(formdata:FormData)=>{
+ 
+  console.log('form',formdata)
+
+  const date= formdata.get('date')
+  const startTime=formdata.get('startTime')
+  const endTime=formdata.get('endTime')
+const payload={
+  date,
+  startTime,
+  endTime,
+}
+  console.log('data',payload)
     
 }
 

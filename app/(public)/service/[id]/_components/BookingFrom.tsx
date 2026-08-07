@@ -10,14 +10,6 @@ import { IService } from '../../../../../utils/type'
 
 
 
-const availableSlots = [
-  { time: '09:00 AM', available: true },
-  { time: '10:30 AM', available: true },
-  { time: '01:00 PM', available: false },
-  { time: '03:30 PM', available: true },
-  { time: '05:00 PM', available: true },
-]
-
 const initialState = {
   success: false,
   message: '',
@@ -28,6 +20,8 @@ const BookingFrom = ({serviceDetail}:any) => {
   const [state, action, isPending] = useActionState(bookingCreate, initialState)
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedSlot, setSelectedSlot] = useState('')
+const availabilitiesSlots= serviceDetail.technician.availabilities
+console.log('avb',availabilitiesSlots)
 
   return (
     <>
@@ -96,23 +90,23 @@ const BookingFrom = ({serviceDetail}:any) => {
       <Clock className="w-3.5 h-3.5 text-teal-400" /> Available Time Slots
     </label>
     <div className="grid grid-cols-1 gap-2.5 max-h-52 overflow-y-auto pr-1">
-      {availableSlots.map((slot, index) => (
+      {availabilitiesSlots.map((slot, index) => (
         <button
           key={index}
           type="button"
-          disabled={!slot.available}
-          onClick={() => setSelectedSlot(slot.time)}
+          disabled={slot.isBooked}
+          onClick={() => setSelectedSlot(slot.startTime)}
           className={`w-full py-2.5 px-4 rounded-xl text-xs font-medium border transition-all flex items-center justify-between ${
-            !slot.available
+              slot.isBooked
               ? 'bg-slate-950/40 border-slate-900 text-slate-600 cursor-not-allowed line-through'
-              : selectedSlot === slot.time
+              : selectedSlot === slot.startTime
               ? 'bg-teal-500/20 border-teal-500 text-teal-300 shadow-md shadow-teal-500/10'
               : 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-900/50'
           }`}
         >
-          <span className="font-semibold">{slot.time}</span>
+          <span className="font-semibold">{slot.startTime}</span>
           <span className="text-[10px] tracking-wide uppercase px-2 py-0.5 rounded-md bg-slate-900/80">
-            {slot.available ? (selectedSlot === slot.time ? 'Selected' : 'Available') : 'Booked'}
+            {!slot.isBooked ? (selectedSlot === slot.startTime? 'Selected' : 'Available') : 'Booked'}
           </span>
         </button>
       ))}

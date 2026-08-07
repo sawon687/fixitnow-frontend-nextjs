@@ -18,35 +18,8 @@ export default async function TechnicianProfilePage({
 }) {
   const { id } = await params;
 
-  // // const [selectedDate, setSelectedDate] = useState<string>('2026-08-05');
-  // // const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
-  // const [bookingSuccess, setBookingSuccess] = useState<boolean>(false);
 
-  // Mock technician & service detail data
-  // const serviceDetail = {
-  //   id: "806cd8ce-ee3e-4f75-b689-4e84d60b2e97",
-  //   title: "Professional Home Electrical Repair",
-  //   description: "Expert electrical repair services including wiring, switch replacement, circuit breaker repair, fan installation, and troubleshooting for residential properties.",
-  //   price: 1300,
-  //   priceType: "Fixed",
-  //   technician: {
-  //     id: "0b038471-3923-4595-83c6-8b2563cbfdb8",
-  //     name: "Rahim Ahmed",
-  //     rating: 4.9,
-  //     reviewsCount: 124,
-  //     experience: "8+ Years Experience",
-  //     location: "Dhaka, Bangladesh",
-  //     bio: "Certified senior electrical technician specializing in home automation, complex circuit troubleshooting, and secure residential wiring installations.",
-  //     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80"
-  //   }
-  // };
 
-  const availableSlots = [
-    { time: "09:00 AM - 11:00 AM", available: true },
-    { time: "11:30 AM - 01:30 PM", available: false }, // Booked slot example
-    { time: "03:00 PM - 05:00 PM", available: true },
-    { time: "05:30 PM - 07:30 PM", available: true },
-  ];
 
   const serviceDetail = await singleService(id as string);
   console.log('technishains',serviceDetail.technician.technician)
