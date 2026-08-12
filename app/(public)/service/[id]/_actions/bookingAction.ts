@@ -1,20 +1,22 @@
 'use server'
 
-
-interface IPrevState<T>{
-  success:boolean,
-  status:number,
-  message:string,
-  data?:T
-}
+import { promises } from 'dns';
+import { cookies } from 'next/headers';
 
 
 
-export const bookingCreate = async <T>(
-  prevState: IPrevState<T>,
+type BookingState = {
+  success: boolean;
+  message: string;
+  status: number;
+  error?: string;
+};
+
+export const bookingCreate = async(
+  prevState: BookingState,
   formData: FormData
-) => {
-  try {
+):Promise<BookingState> => {
+
     const serviceId = formData.get('serviceId') as string;
     const technicianId = formData.get('technicianId') as string;
     const scheduledDate = formData.get('scheduledDate') as string;
@@ -38,31 +40,23 @@ const payload={
       totalAmount,
       address,
     }
-    
+    const cookieStore=await cookies()
+    const accessToken=cookieStore.get('accessToken')?.value
      const res = await fetch(
-    `${process.env.API_URL}/api`,
+    `${process.env.API_URL}/api/bookings`,
     {
       headers: {
         "Content-Type": "application/json",
-        
+       Authorization: `Bearer ${accessToken}`,
       },
-      method: "GET",
-      cache: "no-store",
+      method: "POST",
+      body:JSON.stringify(payload)
     }
   );
-
-  } catch (error) {
-    console.error(error);
-
-    return {
-      success: false,
-      message: 'Booking failed',
-      error: 'Something went wrong',
-    };
+const result= await res.json()
+   return result 
+ 
   }
-};
-
-
 export const singleService=async(id:String)=>{
  
      const res = await fetch(

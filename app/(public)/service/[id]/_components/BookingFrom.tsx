@@ -4,7 +4,7 @@ import React, { useActionState, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CalendarIcon, CheckCircle, Clock, MapPin, Sparkles, ArrowRight } from 'lucide-react';
 
-import { bookingCreate } from '../_actions/bookingAction';
+
 import MotionAniBox from '../../../../../components/shared/MotionAniBox';
 
 // Shadcn UI Imports
@@ -20,11 +20,13 @@ import { Input } from '@/components/ui/input';
 import { getMe } from '../../../../../service/Profileme';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { bookingCreate } from '../_actions/bookingAction';
 
 
 const initialState = {
   success: false,
   message: '',
+  status:0,
   error: '',
 };
 
