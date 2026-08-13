@@ -21,6 +21,7 @@ import { getMe } from '../../../../../service/Profileme';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { bookingCreate } from '../_actions/bookingAction';
+import { stat } from 'fs';
 
 
 const initialState = {
@@ -54,15 +55,19 @@ useEffect(() => {
 }, []);
   const [state, action, isPending] = useActionState(
     bookingCreate,
-    initialState
+     ''
   );
 
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlot, setSelectedSlot] = useState('');
 
- 
- 
-  console.log('user',user)
+ useEffect(()=>{
+       if(!state.success && state.errors?.length)
+       {
+         toast.error(state.errors?.[0].message)
+       }
+ },[state])
+
   
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

@@ -4,18 +4,17 @@ import { promises } from 'dns';
 import { cookies } from 'next/headers';
 
 
-
 type BookingState = {
   success: boolean;
   message: string;
   status: number;
-  error?: string;
+  errors?:string[];
 };
 
 export const bookingCreate = async(
   prevState: BookingState,
   formData: FormData
-):Promise<BookingState> => {
+) => {
 
     const serviceId = formData.get('serviceId') as string;
     const technicianId = formData.get('technicianId') as string;
@@ -54,6 +53,7 @@ const payload={
     }
   );
 const result= await res.json()
+console.log('resul',result)
    return result 
  
   }
