@@ -28,58 +28,59 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getMyservice } from './_actions/serviceActions';
 
-// import { getMyService } from "../services/_actions/Service";
 
-const servicesData = [
-  {
-    id: "d7a89684-b440-4950-b595-737583ff0b37",
-    technicianId: "dfd9456e-ff7a-4178-9a7f-17b357b51249",
-    categoryId: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
-    title: "Professional Home Electrical Repair",
-    description:
-      "Expert electrical repair services including wiring, switch replacement, circuit breaker repair, fan installation, and troubleshooting for residential properties.",
-    price: 1300,
-    priceType: "Fixed",
-    isActive: true,
-    createdAt: "2026-08-03T14:37:17.511Z",
-  },
-  {
-    id: "e8b91795-c551-5061-c606-848694gg1c48",
-    technicianId: "dfd9456e-ff7a-4178-9a7f-17b357b51249",
-    categoryId: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
-    title: "Advanced Plumbing & Pipe Leak Fix",
-    description:
-      "Comprehensive plumbing solutions covering leak detection, pipe replacement, faucet installation, drain cleaning, and emergency water fixture maintenance.",
-    price: 1500,
-    priceType: "Fixed",
-    isActive: true,
-    createdAt: "2026-08-03T15:00:00.000Z",
-  },
-  {
-    id: "f9c02806-d662-6172-d717-959705hh2d59",
-    technicianId: "dfd9456e-ff7a-4178-9a7f-17b357b51249",
-    categoryId: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
-    title: "AC Maintenance & Deep Cleaning",
-    description:
-      "Full air conditioner servicing, filter cleaning, gas refilling, cooling efficiency checks, and complete compressor checkups for summer readiness.",
-    price: 2200,
-    priceType: "Fixed",
-    isActive: false,
-    createdAt: "2026-08-03T16:15:00.000Z",
-  },
-];
+
+// const servicesData = [
+//   {
+//     id: "d7a89684-b440-4950-b595-737583ff0b37",
+//     technicianId: "dfd9456e-ff7a-4178-9a7f-17b357b51249",
+//     categoryId: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
+//     title: "Professional Home Electrical Repair",
+//     description:
+//       "Expert electrical repair services including wiring, switch replacement, circuit breaker repair, fan installation, and troubleshooting for residential properties.",
+//     price: 1300,
+//     priceType: "Fixed",
+//     isActive: true,
+//     createdAt: "2026-08-03T14:37:17.511Z",
+//   },
+//   {
+//     id: "e8b91795-c551-5061-c606-848694gg1c48",
+//     technicianId: "dfd9456e-ff7a-4178-9a7f-17b357b51249",
+//     categoryId: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
+//     title: "Advanced Plumbing & Pipe Leak Fix",
+//     description:
+//       "Comprehensive plumbing solutions covering leak detection, pipe replacement, faucet installation, drain cleaning, and emergency water fixture maintenance.",
+//     price: 1500,
+//     priceType: "Fixed",
+//     isActive: true,
+//     createdAt: "2026-08-03T15:00:00.000Z",
+//   },
+//   {
+//     id: "f9c02806-d662-6172-d717-959705hh2d59",
+//     technicianId: "dfd9456e-ff7a-4178-9a7f-17b357b51249",
+//     categoryId: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
+//     title: "AC Maintenance & Deep Cleaning",
+//     description:
+//       "Full air conditioner servicing, filter cleaning, gas refilling, cooling efficiency checks, and complete compressor checkups for summer readiness.",
+//     price: 2200,
+//     priceType: "Fixed",
+//     isActive: false,
+//     createdAt: "2026-08-03T16:15:00.000Z",
+//   },
+// ];
 
 const MyServices = async () => {
-  // পরে API থেকে data আনবে:
-  // const result = await getMyService();
-  // const servicesData = result?.data || [];
 
+  const result = await getMyservice();
+  const servicesData = result?.data || [];
+     console.log('sercies sawon',servicesData)
   const totalServices = servicesData.length;
-  const activeServices = servicesData.filter(
-    (service) => service.isActive
-  ).length;
-  const inactiveServices = totalServices - activeServices;
+  // const activeServices = servicesData.filter(
+  //   (service) => service.isActive
+  // ).length;
+  // const inactiveServices = totalServices - activeServices;
 
   return (
     <div className="min-h-screen bg-muted/20">
@@ -137,7 +138,7 @@ const MyServices = async () => {
                 </p>
 
                 <p className="mt-1 text-2xl font-bold">
-                  {activeServices}
+                  0
                 </p>
               </div>
 
@@ -156,7 +157,7 @@ const MyServices = async () => {
                 </p>
 
                 <p className="mt-1 text-2xl font-bold">
-                  {inactiveServices}
+                0
                 </p>
               </div>
 
