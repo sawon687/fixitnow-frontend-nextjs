@@ -27,24 +27,23 @@ const SlotAddDialog = ({ isModalOpen, setIsModalOpen, onSlotCreated }: SlotAddDi
     date: "",
     startTime: "",
     endTime: "",
-    isAvailable: true,
+    status: "Available" as "Available" | "Booked",
   });
 
   const [state, formAction, isPending] = useActionState(async (previousState: any, formData: FormData) => {
     const res = await createSlot(previousState, formData);
     if (res?.success) {
       setIsModalOpen(false);
-      toast.success(res.message||'Slot Creted SuccessFully')
+      toast.success(res.message || 'Slot Created Successfully');
       setSlotForm({
         date: "",
         startTime: "",
         endTime: "",
-        isAvailable: true,
+        status: "Available",
       });
       if (onSlotCreated) onSlotCreated();
-    }
-    else if(!res?.success || res?.erros?.length){
-        toast.error(res?.errors?.[0].message|| res?.message)
+    } else if (!res?.success || res?.errors?.length) {
+      toast.error(res?.errors?.[0].message || res?.message);
     }
     return res;
   }, null);
@@ -69,9 +68,10 @@ const SlotAddDialog = ({ isModalOpen, setIsModalOpen, onSlotCreated }: SlotAddDi
         <form action={formAction}>
           <div className="space-y-4 py-3">
           
-            <input type="hidden" name="isAvailable" value={String(slotForm.isAvailable)} />
+            {/* Hidden input to pass enum status to Server Action */}
+            <input type="hidden" name="status" value={slotForm.status} />
 
-            {/* date Input */}
+            {/* Date Input */}
             <div className="space-y-2">
               <Label className="text-xs text-slate-300">Date</Label>
               <div className="relative">
@@ -87,7 +87,7 @@ const SlotAddDialog = ({ isModalOpen, setIsModalOpen, onSlotCreated }: SlotAddDi
               </div>
             </div>
 
-            {/* time pickers */}
+            {/* Time Pickers */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label className="text-xs text-slate-300">Start Time</Label>
@@ -126,15 +126,15 @@ const SlotAddDialog = ({ isModalOpen, setIsModalOpen, onSlotCreated }: SlotAddDi
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setSlotForm({ ...slotForm, isAvailable: true })}
+                  onClick={() => setSlotForm({ ...slotForm, status: "Available" })}
                   className={`rounded-xl border p-3 text-left transition-all ${
-                    slotForm.isAvailable
+                    slotForm.status === "Available"
                       ? "border-emerald-500/40 bg-emerald-500/10 shadow-md"
                       : "border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.04]"
                   }`}
                 >
-                  <CheckCircle2 className={`mb-2 h-5 w-5 ${slotForm.isAvailable ? "text-emerald-400" : "text-slate-500"}`} />
-                  <p className={`text-xs font-semibold ${slotForm.isAvailable ? "text-emerald-300" : "text-slate-400"}`}>
+                  <CheckCircle2 className={`mb-2 h-5 w-5 ${slotForm.status === "Available" ? "text-emerald-400" : "text-slate-500"}`} />
+                  <p className={`text-xs font-semibold ${slotForm.status === "Available" ? "text-emerald-300" : "text-slate-400"}`}>
                     Available
                   </p>
                   <p className="mt-1 text-[10px] text-slate-500">Open for clients</p>
@@ -142,28 +142,21 @@ const SlotAddDialog = ({ isModalOpen, setIsModalOpen, onSlotCreated }: SlotAddDi
 
                 <button
                   type="button"
-                  onClick={() => setSlotForm({ ...slotForm, isAvailable: false })}
+                  onClick={() => setSlotForm({ ...slotForm, status: "Booked" })}
                   className={`rounded-xl border p-3 text-left transition-all ${
-                    !slotForm.isAvailable
+                    slotForm.status === "Booked"
                       ? "border-slate-500/40 bg-slate-500/10 shadow-md"
                       : "border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.04]"
                   }`}
                 >
-                  <XCircle className={`mb-2 h-5 w-5 ${!slotForm.isAvailable ? "text-slate-300" : "text-slate-500"}`} />
-                  <p className={`text-xs font-semibold ${!slotForm.isAvailable ? "text-slate-200" : "text-slate-400"}`}>
-                    Blocked
+                  <XCircle className={`mb-2 h-5 w-5 ${slotForm.status === "Booked" ? "text-slate-300" : "text-slate-500"}`} />
+                  <p className={`text-xs font-semibold ${slotForm.status === "Booked" ? "text-slate-200" : "text-slate-400"}`}>
+                    Booked
                   </p>
                   <p className="mt-1 text-[10px] text-slate-500">Mark as unavailable</p>
                 </button>
               </div>
             </div>
-
-            {/* Error Message Feedback Display */}
-            {!state?.success(
-              <p className="text-xs text-red-400 font-medium bg-red-500/10 border border-red-500/20 p-2.5 rounded-xl">
-                {state.message}
-              </p>
-            )}
           </div>
 
           <DialogFooter className="border-t border-white/[0.06] pt-4">

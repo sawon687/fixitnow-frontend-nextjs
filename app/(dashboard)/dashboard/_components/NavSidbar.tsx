@@ -66,20 +66,11 @@ const navlink = {
       icon: LayoutDashboard,
     },
     {
-      name: "Create Profile",
-      path: "/dashboard/technician/create-profile",
-      icon: User,
-    },
-    {
       name: "My Services",
       path: "/dashboard/technician/services",
       icon: Wrench,
     },
-    {
-      name: "Add Service",
-      path: "/dashboard/technician/services/create",
-      icon: BriefcaseBusiness,
-    },
+  
     {
       name: "Bookings",
       path: "/dashboard/technician/bookings",
@@ -90,11 +81,7 @@ const navlink = {
       path: "/dashboard/technician/availability",
       icon: Clock,
     },
-    {
-      name: "Reviews",
-      path: "/dashboard/technician/reviews",
-      icon: Star,
-    },
+
   ],
 
   CUSTOMER: [
@@ -105,7 +92,7 @@ const navlink = {
     },
     {
       name: "My Bookings",
-      path: "/dashboard/customer/bookings",
+      path: "/dashboard/customer/my-bookings",
       icon: CalendarCheck,
     },
     {
@@ -134,7 +121,7 @@ const NavSidbar = ({
   const pathname = usePathname();
 
   // পরে auth user থেকে আসবে
-  const role: "ADMIN" | "TECHNICIAN" | "CUSTOMER" = "TECHNICIAN";
+  const role: "ADMIN" | "TECHNICIAN" | "CUSTOMER" = "CUSTOMER";
 
   const sidebarLink = navlink[role];
 

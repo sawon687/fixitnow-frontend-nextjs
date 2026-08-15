@@ -1,27 +1,32 @@
 import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CalendarDays, CalendarIcon, ChevronLeft, ChevronRight, Clock3, MoreHorizontal, Plus, Zap } from "lucide-react";
+import { CalendarDays, CalendarIcon, ChevronLeft, ChevronRight, Clock3, Plus, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { AvailabilitySlot } from "../AvailabilityScheduler";
+import { AvailabilitySlot } from '../page';
+import DropdownStatus from './DropdownStatus';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 interface MainContentGridProps {
   availabilityData: AvailabilitySlot[];
   selectedDate: string;
   setSelectedDate: (date: string) => void;
   openModal: () => void;
+  router: AppRouterInstance;
+  onRefresh?: () => void; // প্রপস যুক্ত করা হয়েছে
 }
 
-const MainConentGrid = ({
+const MainContentGrid = ({
   availabilityData,
   selectedDate,
   setSelectedDate,
   openModal,
+  router,
+  onRefresh,
 }: MainContentGridProps) => {
   const [currentYears, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
-  // Compute days list of the active month view
   const monthDaysList = useMemo(() => {
     const dayMonthList = new Date(currentYears, currentMonth + 1, 0).getDate();
     const list: string[] = [];
@@ -66,7 +71,6 @@ const MainConentGrid = ({
     };
   };
 
-  // Filter slots corresponding precisely to the selected date
   const selectedSlots = useMemo(() => {
     return availabilityData.filter((slot) => slot.date === selectedDate);
   }, [availabilityData, selectedDate]);
@@ -88,7 +92,6 @@ const MainConentGrid = ({
         </CardHeader>
 
         <CardContent>
-          {/* Month Switcher Header */}
           <div className="mb-4 flex items-center justify-between rounded-xl border border-white/[0.06] bg-[#111927] px-3 py-2">
             <Button
               variant="ghost"
@@ -111,20 +114,19 @@ const MainConentGrid = ({
             </Button>
           </div>
 
-          {/* Scrollable Month Dates List */}
           <div className="max-h-[380px] space-y-2 overflow-y-auto pr-1">
             {monthDaysList.map((dateStr) => {
               const info = formatDateInfo(dateStr);
               const active = selectedDate === dateStr;
 
               const daySlots = availabilityData.filter((slot) => slot.date === dateStr);
-              const hasAvailable = daySlots.some((slot) => slot.isAvailable && !slot.isBooked);
+              const hasAvailable = daySlots.some((slot) => slot.status === "Available");
 
               return (
-                <Button
+                <div
                   key={dateStr}
                   onClick={() => setSelectedDate(dateStr)}
-                  className={`flex w-full items-center justify-between rounded-xl border p-3 text-left transition-all h-auto ${
+                  className={`flex w-full cursor-pointer items-center justify-between rounded-xl border p-3 text-left transition-all h-auto ${
                     active
                       ? "border-emerald-500/40 bg-emerald-600/15 shadow-md shadow-emerald-950/40"
                       : "border-white/[0.05] bg-[#0e1623] hover:border-white/[0.12] hover:bg-[#121c2c]"
@@ -162,12 +164,11 @@ const MainConentGrid = ({
                       }`}
                     />
                   </div>
-                </Button>
+                </div>
               );
             })}
           </div>
 
-          {/* Quick Tip Box */}
           <div className="mt-6 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-4">
             <div className="flex gap-3">
               <Zap className="mt-0.5 h-4 w-4 text-emerald-400 shrink-0" />
@@ -208,7 +209,6 @@ const MainConentGrid = ({
         </CardHeader>
 
         <CardContent>
-          {/* Legend */}
           <div className="mb-5 flex flex-wrap gap-5 border-b border-white/[0.06] pb-5">
             <div className="flex items-center gap-2 text-xs text-slate-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400" />
@@ -224,32 +224,27 @@ const MainConentGrid = ({
             </div>
           </div>
 
-          {/* Slots Listing */}
           <div className="space-y-3">
             {selectedSlots.length > 0 ? (
               selectedSlots.map((slot) => {
-                const status = slot.isBooked
-                  ? "booked"
-                  : !slot.isAvailable
-                  ? "blocked"
-                  : "available";
+                const statusLower = slot.status.toLowerCase();
 
                 return (
                   <div
                     key={slot.id}
                     className={`group relative rounded-xl border p-4 transition-all ${
-                      status === "available"
+                      statusLower === "available"
                         ? "border-emerald-500/15 bg-emerald-500/[0.03] hover:border-emerald-500/30"
-                        : status === "booked"
+                        : statusLower === "booked"
                         ? "border-orange-500/15 bg-orange-500/[0.03] hover:border-orange-500/30"
                         : "border-white/[0.06] bg-white/[0.02] hover:border-white/[0.1]"
                     }`}
                   >
                     <div
                       className={`absolute left-0 top-0 h-full w-[3px] rounded-l-xl ${
-                        status === "available"
+                        statusLower === "available"
                           ? "bg-emerald-400"
-                          : status === "booked"
+                          : statusLower === "booked"
                           ? "bg-orange-400"
                           : "bg-slate-600"
                       }`}
@@ -259,9 +254,9 @@ const MainConentGrid = ({
                       <div className="flex items-center gap-4">
                         <div
                           className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-                            status === "available"
+                            statusLower === "available"
                               ? "bg-emerald-500/10 text-emerald-400"
-                              : status === "booked"
+                              : statusLower === "booked"
                               ? "bg-orange-500/10 text-orange-400"
                               : "bg-white/[0.05] text-slate-500"
                           }`}
@@ -285,27 +280,21 @@ const MainConentGrid = ({
                         <Badge
                           variant="outline"
                           className={`border ${
-                            status === "available"
+                            statusLower === "available"
                               ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-400"
-                              : status === "booked"
+                              : statusLower === "booked"
                               ? "border-orange-500/20 bg-orange-500/10 text-orange-400"
                               : "border-white/[0.08] bg-white/[0.04] text-slate-400"
                           }`}
                         >
-                          {status === "available"
-                            ? "Available"
-                            : status === "booked"
-                            ? "Booked"
-                            : "Blocked"}
+                          {slot.status}
                         </Badge>
 
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-slate-500 hover:bg-white/[0.05] hover:text-white h-8 w-8"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        <DropdownStatus 
+                          router={router} 
+                          slotId={slot.id} 
+                          onRefresh={onRefresh} // এখানে কলব্যাক পাস করা হলো
+                        />
                       </div>
                     </div>
                   </div>
@@ -337,4 +326,4 @@ const MainConentGrid = ({
   );
 };
 
-export default MainConentGrid;
+export default MainContentGrid;

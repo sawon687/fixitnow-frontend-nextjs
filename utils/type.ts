@@ -101,3 +101,20 @@ export interface IService {
   category: ICategory;
   technician: ITechnicianProfile;
 }
+
+
+export interface IStateRes{
+    success:boolean,
+    message:string,
+    status:number,
+    erros?:{
+        acccessToken:string,
+        refreshToken:string,
+    }
+}
+
+export enum AvailabilityStatus {
+  Available,
+   Booked,
+   Blocked
+}

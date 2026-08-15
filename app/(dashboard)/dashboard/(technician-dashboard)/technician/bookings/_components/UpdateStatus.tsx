@@ -1,24 +1,34 @@
 'use client'
+
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { TableCell } from '../../../../../../../components/ui/table'
 import { Button } from '../../../../../../../components/ui/button'
 import { updateStatusAction } from '../_actions/bookingAction'
 import { toast } from 'sonner'
 import { BookingStatus } from '../../../../../../../utils/type'
 
-const UpdateStatus = ({ booking }: any) => {
+interface UpdateStatusProps {
+  booking: {
+    id: string
+    status: string | BookingStatus
+  }
+}
+
+const UpdateStatus = ({ booking }: UpdateStatusProps) => {
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const handleUpdate = async (newStatus: string, id: string) => {
     try {
       setLoading(true)
       const result = await updateStatusAction(newStatus, id)
-     
+
       if (result.success) {
-        toast.success(`Booking status updated to ${newStatus} successfully!`)
-     
+        toast.success(`Booking status updated to ${newStatus.replace('_', ' ')} successfully!`)
+        router.refresh() // Refreshes the Server Component to pull fresh DB data
       } else {
-        toast.error("Failed to update status")
+        toast.error(result.message || "Failed to update status")
       }
     } catch (error) {
       console.error(error)
@@ -32,7 +42,7 @@ const UpdateStatus = ({ booking }: any) => {
     switch (status) {
       case "REQUESTED":
         return (
-          <>
+          <div className="flex justify-end gap-2">
             <Button 
               disabled={loading}
               onClick={() => handleUpdate(BookingStatus.ACCEPTED, id)} 
@@ -51,8 +61,9 @@ const UpdateStatus = ({ booking }: any) => {
             >
               Decline
             </Button>
-          </>
+          </div>
         )
+      case "ACCEPTED":
       case "PAID":
         return (
           <Button 
@@ -61,7 +72,7 @@ const UpdateStatus = ({ booking }: any) => {
             size="sm" 
             className="bg-purple-600 hover:bg-purple-700 text-white"
           >
-            Start Job
+            Mark In-Progress
           </Button>
         )
       case "IN_PROGRESS":
@@ -72,7 +83,7 @@ const UpdateStatus = ({ booking }: any) => {
             size="sm" 
             className="bg-green-600 hover:bg-green-700 text-white"
           >
-            Complete Job
+            Mark Completed
           </Button>
         )
       default:
@@ -81,7 +92,7 @@ const UpdateStatus = ({ booking }: any) => {
   }
 
   return (
-    <TableCell className="text-right space-x-2">
+    <TableCell className="text-right">
       {renderTechnicianActions(booking.status as string, booking.id as string)}
     </TableCell>
   )

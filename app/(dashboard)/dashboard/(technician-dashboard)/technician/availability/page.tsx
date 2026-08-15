@@ -4,24 +4,25 @@ import React, { useEffect, useState } from "react";
 import { CalendarDays, CheckCircle2, Clock3, XCircle, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import MainConentGrid from "./_components/MainConentGrid";
 import SlotAddDialog from "./_components/SlotAddDialog";
+import { getMySlot } from './_actions/action';
+import MainContentGrid from './_components/MainConentGrid';
+import { useRouter } from 'next/navigation';
 
 export type AvailabilitySlot = {
   id: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   startTime: string;
   endTime: string;
-  isAvailable: boolean;
-  isBooked: boolean;
+  status: "Available" | "Booked" | "Blocked";
 };
 
-const AvailabilityScheduler = () => {
+const AvailabilitySchedulerPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [availabilityData, setAvailabilityData] = useState<AvailabilitySlot[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  // Default selected date to today
   const [selectedDate, setSelectedDate] = useState(() => {
     const today = new Date();
     const monthStr = String(today.getMonth() + 1).padStart(2, "0");
@@ -29,12 +30,11 @@ const AvailabilityScheduler = () => {
     return `${today.getFullYear()}-${monthStr}-${dayStr}`;
   });
 
-  // Fetch slots dynamically using getMySlot()
   const fetchSlots = async () => {
     try {
       setLoading(true);
-      // const data = await getMySlot();
-      // setAvailabilityData(data || []);
+      const result = await getMySlot();
+      setAvailabilityData(result.data || []);
     } catch (error) {
       console.error("Failed to fetch slots", error);
     } finally {
@@ -46,10 +46,9 @@ const AvailabilityScheduler = () => {
     fetchSlots();
   }, []);
 
-  // Compute stats dynamically
-  const availableCount = availabilityData.filter((s) => s.isAvailable && !s.isBooked).length;
-  const bookedCount = availabilityData.filter((s) => s.isBooked).length;
-  const blockedCount = availabilityData.filter((s) => !s.isAvailable && !s.isBooked).length;
+  const availableCount = availabilityData.filter((s) => s.status === "Available").length;
+  const bookedCount = availabilityData.filter((s) => s.status === "Booked").length;
+  const blockedCount = availabilityData.filter((s) => s.status === "Blocked").length;
 
   return (
     <div className="min-h-screen bg-[#070b14] p-4 text-slate-100 md:p-6 lg:p-8">
@@ -130,12 +129,14 @@ const AvailabilityScheduler = () => {
           </Card>
         </div>
 
-        {/* Main Grid Component with Shared State */}
-        <MainConentGrid
+        {/* Main Grid Component with Shared State & Callback */}
+        <MainContentGrid
           availabilityData={availabilityData}
           selectedDate={selectedDate}
+          router={router}
           setSelectedDate={setSelectedDate}
           openModal={() => setIsModalOpen(true)}
+          onRefresh={fetchSlots} 
         />
       </div>
 
@@ -149,4 +150,4 @@ const AvailabilityScheduler = () => {
   );
 };
 
-export default AvailabilityScheduler;
+export default AvailabilitySchedulerPage;

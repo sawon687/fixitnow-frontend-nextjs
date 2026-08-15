@@ -67,7 +67,7 @@ export const singleService=async(id:String)=>{
         
       },
       method: "GET",
-      cache: "no-store",
+      
     }
   );
 
@@ -77,3 +77,25 @@ export const singleService=async(id:String)=>{
 
   return result.data
 }
+
+export const getavaliableSlot=async(date:String)=>{
+   console.log('date',date)
+  const cookieStore=await cookies()
+    const accessToken=cookieStore.get('accessToken')?.value
+       const res = await fetch(
+    `${process.env.API_URL}/api/technician/availableSlot/${date}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+      },
+      method: "GET",
+      cache: "no-store",
+    }
+  );
+
+  const result=await res.json()
+     console.log('result date',result)
+  return result
+}
+
