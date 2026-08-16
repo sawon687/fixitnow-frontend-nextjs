@@ -85,6 +85,7 @@ export interface ITechnicianProfile {
   avgRating: number;
   createdAt: string;
   updatedAt: string; 
+  users?:IUser
   
 }
 export interface IService {
@@ -117,4 +118,31 @@ export enum AvailabilityStatus {
   Available,
    Booked,
    Blocked
+}
+
+export interface IBooking {
+  id: string;
+  userId: string;
+  technicianId: string;
+  serviceId: string;
+  scheduledDate: string;
+  address: string;
+  status: "ACCEPTED" | "PENDING" | "CANCELLED" | "COMPLETED";
+  startTime: string;
+  totalAmount: number;
+  cancelledAt: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+ technician?:ITechnicianProfile
+ review?:IReview
+}
+
+export interface IReview{
+   rating:number,
+   comment:string,
+   bookingId:string,
+    technician:string,
+    userId:string
+    createAt:string
 }

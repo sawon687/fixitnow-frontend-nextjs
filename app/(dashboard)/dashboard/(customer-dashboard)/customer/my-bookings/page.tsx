@@ -6,6 +6,7 @@ import { Button } from "../../../../../../components/ui/button";
 import FiltaringBookings from "./_components/FiltaringBookings";
 import { SearchParams } from "next/dist/server/request/search-params";
 import BookingStatusColor from '../../../../../../components/shared/BookingStatusColor';
+import { formatTime } from '../../../../../../utils/timeFormate';
 
 const MyBookingsPage = async ({ searchParams }: SearchParams) => {
   const params = (await searchParams) as BookingParams | undefined;
@@ -14,16 +15,7 @@ const MyBookingsPage = async ({ searchParams }: SearchParams) => {
   const res = await getmyBookings(params || ({} as BookingParams));
   const bookings = res.data || [];
   
-  const formatTime = (time: string) => {
-    const [hour, minute] = time.split(":");
-    const date = new Date();
-    date.setHours(Number(hour), Number(minute), 0, 0);
 
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-12">
@@ -146,6 +138,8 @@ const MyBookingsPage = async ({ searchParams }: SearchParams) => {
                         </Button>
                       </Link>
                     )}
+
+                    
 
                     <Link href={`/dashboard/customer/my-bookings/${booking.id}`}>
                       <Button
