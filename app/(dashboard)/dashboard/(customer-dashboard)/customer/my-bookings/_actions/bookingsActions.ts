@@ -5,6 +5,7 @@ export type BookingParams={
     status:string[]
 }
 export const getmyBookings=async(params:BookingParams)=>{
+  console.log('params status',params)
             const cookieStore = await cookies()
  const accessToken = cookieStore.get("accessToken")?.value
     const res= await fetch(`${process.env.API_URL}/api/bookings?status=${params?.status}`, {
@@ -19,7 +20,7 @@ export const getmyBookings=async(params:BookingParams)=>{
   })
 
   const result=await res.json()
-  console.log('bookigns',result)
+     console.log('booking',result)
   return result
 }
 

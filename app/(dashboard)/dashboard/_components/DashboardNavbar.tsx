@@ -3,7 +3,7 @@ import { DashboardNavbarProps } from '../../../../utils/type'
 
 
 
-const DashboardNavbar = ({ setIsCollapsed, isCollapsed, setIsMobileOpen }: DashboardNavbarProps
+const DashboardNavbar = ({ setIsCollapsed, isCollapsed, setIsMobileOpen,user }: DashboardNavbarProps
 ) => {
   const toggleSidebar = () => setIsCollapsed?.(!isCollapsed)
   const openMobileMenu = () => setIsMobileOpen?.(true)

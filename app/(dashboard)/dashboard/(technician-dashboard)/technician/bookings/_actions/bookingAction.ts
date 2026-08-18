@@ -19,7 +19,7 @@ export const updateStatusAction=async(status:string,id:string)=>{
        
 
        const result=await res.json()
-       console.log(result,'result')
+     console.log(result,'update staus')
 
        return result
 }

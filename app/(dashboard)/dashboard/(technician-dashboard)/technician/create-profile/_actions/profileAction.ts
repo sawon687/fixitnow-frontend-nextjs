@@ -39,7 +39,7 @@ const result=await res.json()
     bio,
     skills
   })
-console.log(result,result)
+
   return result
 }
 
@@ -58,7 +58,7 @@ export const getmeProfile=async()=>{
   })
 
        const result=  await res.json()
-       console.log('results data',result)
+       
   return result
  
 }

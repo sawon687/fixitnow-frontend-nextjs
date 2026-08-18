@@ -33,7 +33,7 @@ interface Booking {
 const BookingAll = async () => {
   const result = await getAllBooking()
   const bookingsData = result?.data?.length ? result.data : []
-
+    console.log('bokingData',bookingsData)
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-6">

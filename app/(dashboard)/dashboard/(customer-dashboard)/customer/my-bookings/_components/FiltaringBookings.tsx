@@ -12,7 +12,7 @@ const FiltaringBookings = () => {
      const [activeTab, setActiveTab] = useState<string>(currentStatus);
       useEffect(()=>{
          const statusFromUrl=params.get('status') || "ALL"
-
+            
          if( statusFromUrl && statusFromUrl !== activeTab)
          {
             setActiveTab(statusFromUrl)
@@ -28,9 +28,10 @@ const FiltaringBookings = () => {
   
 
       }
+      const filterBtn=  ["ALL", "REQUESTED","ACCEPTED", "COMPLETED", "CANCELLED","PAID","IN_PROGRESS","DECLINED"]
   return (
     <div>    <div className="flex flex-wrap gap-2">
-              {["ALL", "REQUESTED","ACCEPTED", "COMPLETED", "CANCELLED","PAID","IN_PROGRESS","DECLINED"].map((tab) => (
+           { filterBtn.map((tab) => (
                 <button
                   key={tab}
                   onClick={() =>handleClick(tab)}

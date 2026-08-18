@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const getMe=async()=>{
      const cookieStore= await cookies()
@@ -18,5 +19,18 @@ export const getMe=async()=>{
 
     const  result=await res.json()
 
-    return result
+    return result.data
+}
+
+
+export const signOUt=async()=>{
+  console.log('signOUt sawon')
+  const cookieStore=await cookies()
+
+  console.log("Before:", cookieStore.getAll());
+       cookieStore.delete('accessToken')
+       cookieStore.delete('refreshToken')
+
+  console.log("AFTER:", cookieStore.getAll());
+       redirect('/auth/login')
 }

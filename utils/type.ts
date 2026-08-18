@@ -11,10 +11,11 @@ export type TState={
 }
 
 export type DashboardNavbarProps = {
-  setIsCollapsed?: Dispatch<SetStateAction<boolean>>
-  isCollapsed: boolean
-  setIsMobileOpen: Dispatch<SetStateAction<boolean>>
-  isMobileOpen?:boolean
+  setIsCollapsed?: Dispatch<SetStateAction<boolean>>,
+  isCollapsed: boolean,
+  setIsMobileOpen: Dispatch<SetStateAction<boolean>>,
+  isMobileOpen?:boolean,
+  user:IUser
 
 }
 
@@ -64,13 +65,18 @@ export enum IRole {
   CUSTOMER = "CUSTOMER",
   TECHNICIAN = "TECHNICIAN",
 }
+
+export enum UserStatus{
+   BAN="BAN",
+   UNBAN="UNBAN"
+}
 export interface IUser {
   id: string;
   name: string;
   email: string;
   password: string;
   role:IRole
-  status: "UNBAN" | "BAN";
+  status: UserStatus
   createdAt: string;
   updatedAt: string;
 }

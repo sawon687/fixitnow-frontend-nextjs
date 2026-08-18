@@ -96,13 +96,13 @@ const navlink = {
       icon: CalendarCheck,
     },
     {
-      name: "Payments",
-      path: "/dashboard/customer/payments",
+      name: "Payments History",
+      path: "/dashboard/customer/payments-history",
       icon: CreditCard,
     },
     {
       name: "My Reviews",
-      path: "/dashboard/customer/reviews",
+      path: "/dashboard/customer/my-reviews",
       icon: Star,
     },
     {
@@ -117,13 +117,14 @@ const NavSidbar = ({
   isCollapsed,
   setIsMobileOpen,
   isMobileOpen,
+  user
 }: DashboardNavbarProps) => {
   const pathname = usePathname();
 
   // পরে auth user থেকে আসবে
-  const role: "ADMIN" | "TECHNICIAN" | "CUSTOMER" = "CUSTOMER";
+  const role: "ADMIN" | "TECHNICIAN" | "CUSTOMER" = user?.role;
 
-  const sidebarLink = navlink[role];
+  const sidebarLink = navlink[role] || [];
 
   return (
     <>
@@ -190,7 +191,7 @@ bg-gradient-to-r from-emerald-500 to-cyan-500
           </div>
 
           <nav className="space-y-2">
-            {sidebarLink.map((item) => (
+            {sidebarLink?.map((item) => (
               <NavItem
                 key={item.path}
                 href={item.path}

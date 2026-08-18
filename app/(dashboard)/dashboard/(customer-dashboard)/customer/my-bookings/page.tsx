@@ -8,7 +8,7 @@ import { SearchParams } from "next/dist/server/request/search-params";
 import BookingStatusColor from '../../../../../../components/shared/BookingStatusColor';
 import { formatTime } from '../../../../../../utils/timeFormate';
 
-const MyBookingsPage = async ({ searchParams }: SearchParams) => {
+const MyBookingspage = async ({ searchParams }: SearchParams) => {
   const params = (await searchParams) as BookingParams | undefined;
   console.log("params", params);
 
@@ -163,4 +163,4 @@ const MyBookingsPage = async ({ searchParams }: SearchParams) => {
   );
 };
 
-export default MyBookingsPage;
+export default MyBookingspage;

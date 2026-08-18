@@ -44,7 +44,6 @@ export const createSlot = async (prevState: TState, formData: FormData) => {
     
       const result = await res.json();
     
-      console.log("results data", result);
     
       return result;
 }
@@ -74,8 +73,7 @@ export const getMySlot = async () => {
     
       const result = await res.json();
     
-      console.log("results data", result);
-    
+  
       return result;
 }
 
@@ -108,6 +106,6 @@ export const UpdateStatus=async(payload:IStatusPayload)=>{
         revalidatePath("/dashboard/technician/availability");
       
 
-     console.log('result',result)
+     
       return result
 }

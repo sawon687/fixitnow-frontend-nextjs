@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import DashboardNavbar from './_components/DashboardNavbar'
 import NavSidbar from './_components/NavSidbar'
+import { getMe } from '../../../service/Profileme'
 
 
 
@@ -14,7 +15,16 @@ export default function DashboardLayout({
 }) {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
- 
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchAwait = async () => {
+      const user = await getMe()
+      setUser(user)
+    }
+
+    fetchAwait()
+  }, [])
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex overflow-hidden">
@@ -24,14 +34,15 @@ export default function DashboardLayout({
             isCollapsed={isCollapsed} 
             setIsMobileOpen={setIsMobileOpen} 
             isMobileOpen={isMobileOpen}
+            user={user}
             />
       {/* Main Area Wrapper */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* Navabar */}
-        <DashboardNavbar setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} setIsMobileOpen={setIsMobileOpen}/>
+        <DashboardNavbar user={user} setIsCollapsed={setIsCollapsed} isCollapsed={isCollapsed} setIsMobileOpen={setIsMobileOpen}/>
 
         {/* Dynamic Children Page Content Container */}
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 mt-5  overflow-y-auto">
           {children}
         </main>
       </div>

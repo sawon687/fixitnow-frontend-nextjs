@@ -23,15 +23,16 @@ const UpdateStatus = ({ booking }: UpdateStatusProps) => {
     try {
       setLoading(true)
       const result = await updateStatusAction(newStatus, id)
-
+               console.log('result action',result)
       if (result.success) {
         toast.success(`Booking status updated to ${newStatus.replace('_', ' ')} successfully!`)
-        router.refresh() // Refreshes the Server Component to pull fresh DB data
+        router.refresh() 
       } else {
-        toast.error(result.message || "Failed to update status")
+        toast.error(result.message || result.errors[0].message)
       }
     } catch (error) {
       console.error(error)
+        setLoading(false)
       toast.error("Something went wrong!")
     } finally {
       setLoading(false)
