@@ -57,11 +57,12 @@ async function getCategories() {
   ];
 }
 
-const CategoryManagementpage = async ({searchPramas}:{searchPramas: Promise<{search:string}>}) => {
-  const  paramas=await searchPramas
-  const result = await getAllCategory(paramas);
+const CategoryManagementpage = async ({searchParams}:{searchParams: Promise<{search:string}>}) => {
+  const  params=await searchParams
+ 
+  const result = await getAllCategory(params);
 
-  console.log('category',result.allcategory)
+ 
   return <>
   
   <CategoryClientView result={result} />

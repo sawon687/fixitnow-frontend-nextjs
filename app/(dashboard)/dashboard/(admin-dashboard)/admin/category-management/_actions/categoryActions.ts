@@ -6,6 +6,7 @@ import { CategoryStatus } from '../../../../../../../utils/type'
 
 export const getAllCategory=async(params:{search:string})=>{
     const search=params?.search
+   
           const cookieStore = await cookies()
          const accessToken = cookieStore.get("accessToken")?.value
             const res= await fetch(`${process.env.API_URL}/api/admin/categories?search=${search}`, {
@@ -20,7 +21,7 @@ export const getAllCategory=async(params:{search:string})=>{
           })
         
           const result=await res.json()
-             console.log('users',result)
+         
           return result.data
 }
 
@@ -37,7 +38,7 @@ export const categirePost=async(state:any,fromdata:FormData)=>{
         description,
         
     }
-    console.log(payload)
+  
  const cookieStore = await cookies()
  const accessToken = cookieStore.get("accessToken")?.value
     const apiUrl=categoryId?`/api/admin/categories/${categoryId}`:`/api/admin/categories`
@@ -52,7 +53,7 @@ export const categirePost=async(state:any,fromdata:FormData)=>{
   })
 
   const result=await res.json()
- console.log(result,'result')
+
 if(result.success)
 {
      revalidatePath(`/dashboard/admin/category-management`)

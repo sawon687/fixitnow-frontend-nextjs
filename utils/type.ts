@@ -142,6 +142,8 @@ export interface IBooking {
   updatedAt: string;
  technician?:ITechnicianProfile
  review?:IReview
+ service:IService
+ customer:IUser
 }
 
 export interface IReview{
