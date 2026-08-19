@@ -38,8 +38,8 @@ const navlink = {
       icon: CalendarCheck,
     },
     {
-      name: "Categories",
-      path: "/dashboard/admin/categories",
+      name: "Category Management",
+      path: "/dashboard/admin/category-management",
       icon: Tags,
     },
      {
