@@ -13,7 +13,7 @@ export const getAllService = async (
     search,
   } = params;
 
-  console.log("params", params);
+  
 
   const param = new URLSearchParams();
 
@@ -57,7 +57,7 @@ export const getAllService = async (
 
   const result = await res.json();
 
-  console.log("results data", result);
+
 
   return result.data;
 };

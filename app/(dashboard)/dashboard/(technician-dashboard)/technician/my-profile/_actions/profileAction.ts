@@ -9,6 +9,7 @@ export async function updateProfile(state:any, formData: FormData) {
   const bio = formData.get("bio") as string
 
   const skillsString = formData.get("skills") as string
+  const mode=formData.get('mode') as string
 
   const skills = skillsString
     ? skillsString.split(",").map(skill => skill.trim())
@@ -20,14 +21,16 @@ export async function updateProfile(state:any, formData: FormData) {
     bio,
     skills
   }
+ 
  const cookieStore = await cookies()
  const accessToken = cookieStore.get("accessToken")?.value
-   const res = await fetch(`${process.env.API_URL}/api/technician/profile`, {
+ const newURL=mode==='create'?'/api/technician/profile':'/api/technician/profile-update'
+   const res = await fetch(`${process.env.API_URL}${newURL}`, {
     headers: {
       'Content-Type': 'application/json',
          Authorization: `Bearer ${accessToken}`,
     },
-    method: "PUT",
+    method:mode==='create'? "POST":'PATCH',
     credentials:"include",
     body: JSON.stringify(payload),
   })
@@ -39,7 +42,7 @@ const result=await res.json()
     bio,
     skills
   })
-
+console.log('result',result)
   return result
 }
 

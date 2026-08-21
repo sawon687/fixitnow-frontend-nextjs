@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -6,7 +7,6 @@ import {
   Users,
   CalendarCheck,
   Tags,
-  BriefcaseBusiness,
   Star,
   User,
   Settings,
@@ -15,7 +15,6 @@ import {
   X,
   CreditCard,
   Clock,
-  Layers,
 } from "lucide-react";
 
 import { DashboardNavbarProps } from "../../../../utils/type";
@@ -33,29 +32,14 @@ const navlink = {
       icon: Users,
     },
     {
-      name: "Manage Bookings",
-      path: "/dashboard/admin/bookings",
-      icon: CalendarCheck,
-    },
-    {
       name: "Category Management",
       path: "/dashboard/admin/category-management",
       icon: Tags,
     },
-     {
-      name: "Add Categories",
-      path: "/dashboard/admin/categories/create-categrie",
-      icon: Layers,
-    },
     {
-      name: "Services",
-      path: "/dashboard/admin/services",
-      icon: BriefcaseBusiness,
-    },
-    {
-      name: "Reviews",
-      path: "/dashboard/admin/reviews",
-      icon: Star,
+      name: "My Profile",
+      path: "/dashboard/technician/profile",
+      icon: User,
     },
   ],
 
@@ -67,10 +51,9 @@ const navlink = {
     },
     {
       name: "My Services",
-      path: "/dashboard/technician/services",
+      path: "/dashboard/technician/my-services",
       icon: Wrench,
     },
-  
     {
       name: "Bookings",
       path: "/dashboard/technician/bookings",
@@ -81,7 +64,11 @@ const navlink = {
       path: "/dashboard/technician/availability",
       icon: Clock,
     },
-
+    {
+      name: "My Profile",
+      path: "/dashboard/technician/my-profile",
+      icon: User,
+    },
   ],
 
   CUSTOMER: [
@@ -106,8 +93,8 @@ const navlink = {
       icon: Star,
     },
     {
-      name: "Profile",
-      path: "/dashboard/customer/profile",
+      name: "My Profile",
+      path: "/dashboard/customer/my-profile",
       icon: User,
     },
   ],
@@ -117,85 +104,149 @@ const NavSidbar = ({
   isCollapsed,
   setIsMobileOpen,
   isMobileOpen,
-  user
+  user,
 }: DashboardNavbarProps) => {
   const pathname = usePathname();
 
-  // পরে auth user থেকে আসবে
   const role: "ADMIN" | "TECHNICIAN" | "CUSTOMER" = user?.role;
 
   const sidebarLink = navlink[role] || [];
 
   return (
     <>
+      {/* Mobile Overlay */}
       {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
           className="
-fixed inset-0 bg-black/70
-z-40 md:hidden
-"
+            fixed inset-0 z-40
+            bg-black/70
+            backdrop-blur-sm
+            md:hidden
+          "
         />
       )}
 
       <aside
         className={`
-fixed inset-y-0 left-0 z-50
+          fixed inset-y-0 left-0 z-50
+          flex flex-col justify-between
 
-md:static
+          md:static
 
-${isCollapsed ? "md:w-20" : "md:w-64"}
+          ${isCollapsed ? "md:w-[84px]" : "md:w-[260px]"}
 
-w-64
+          w-[260px]
 
-bg-zinc-950/95
-border-r border-zinc-800
+          border-r border-zinc-800/80
+          bg-zinc-950
 
-p-6
+          px-4 py-5
 
-flex flex-col justify-between
+          shadow-2xl shadow-black/20
 
-transition-all duration-300
+          transition-all duration-300 ease-in-out
 
-${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
-
-`}
+          ${
+            isMobileOpen
+              ? "translate-x-0"
+              : "-translate-x-full md:translate-x-0"
+          }
+        `}
       >
+        {/* =========================
+            TOP
+        ========================== */}
         <div>
           {/* Logo */}
-
-          <div className="flex items-center gap-3 mb-8">
+          <div
+            className={`
+              mb-8
+              flex items-center
+              ${isCollapsed ? "md:justify-center" : ""}
+              gap-3
+              px-2
+            `}
+          >
+            {/* Logo Icon */}
             <div
               className="
-p-2.5 rounded-xl
-bg-gradient-to-r from-emerald-500 to-cyan-500
-"
+                relative
+                flex h-11 w-11 shrink-0
+                items-center justify-center
+                rounded-2xl
+                bg-gradient-to-br
+                from-emerald-400
+                via-emerald-500
+                to-cyan-500
+                shadow-lg
+                shadow-emerald-500/20
+              "
             >
-              <Wrench className="w-5 h-5 text-black" />
+              <Wrench className="h-5 w-5 text-zinc-950" />
+
+              <span
+                className="
+                  absolute
+                  -right-0.5
+                  -top-0.5
+                  h-2.5
+                  w-2.5
+                  rounded-full
+                  border-2
+                  border-zinc-950
+                  bg-emerald-300
+                "
+              />
             </div>
 
+            {/* Logo Text */}
             {!isCollapsed && (
-              <div>
-                <h1 className="text-white font-bold">FixitNow</h1>
+              <div className="min-w-0">
+                <h1 className="truncate text-base font-bold tracking-tight text-white">
+                  FixItNow
+                </h1>
 
-                <p className="text-xs text-emerald-400">Home Services</p>
+                <p className="text-[11px] font-medium text-emerald-400">
+                  Home Services
+                </p>
               </div>
             )}
 
+            {/* Mobile Close */}
             <button
               onClick={() => setIsMobileOpen(false)}
-              className="md:hidden ml-auto"
+              className="
+                ml-auto
+                rounded-lg
+                p-2
+                text-zinc-500
+                transition
+                hover:bg-zinc-900
+                hover:text-white
+                md:hidden
+              "
             >
-              <X className="text-white" />
+              <X className="h-5 w-5" />
             </button>
           </div>
 
-          <nav className="space-y-2">
+          {/* Navigation Label */}
+          {!isCollapsed && (
+            <div className="mb-3 px-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-600">
+                Workspace
+              </p>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <nav className="space-y-1.5">
             {sidebarLink?.map((item) => (
               <NavItem
                 key={item.path}
                 href={item.path}
-                icon={<item.icon className="w-4 h-4" />}
+                icon={<item.icon className="h-[18px] w-[18px]" />}
                 label={item.name}
                 active={pathname === item.path}
                 collapsed={isCollapsed}
@@ -205,17 +256,28 @@ bg-gradient-to-r from-emerald-500 to-cyan-500
           </nav>
         </div>
 
-        <div className="border-t border-zinc-800 pt-5 space-y-2">
+        {/* =========================
+            BOTTOM
+        ========================== */}
+        <div className="space-y-1.5">
+          {!isCollapsed && (
+            <div className="mb-3 border-t border-zinc-800/80 pt-4 px-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-zinc-600">
+                General
+              </p>
+            </div>
+          )}
+
           <NavItem
             href="/dashboard/settings"
-            icon={<Settings className="w-4 h-4" />}
+            icon={<Settings className="h-[18px] w-[18px]" />}
             label="Settings"
             collapsed={isCollapsed}
           />
 
           <NavItem
             href="/dashboard/support"
-            icon={<HelpCircle className="w-4 h-4" />}
+            icon={<HelpCircle className="h-[18px] w-[18px]" />}
             label="Support"
             collapsed={isCollapsed}
           />
@@ -226,6 +288,10 @@ bg-gradient-to-r from-emerald-500 to-cyan-500
 };
 
 export default NavSidbar;
+
+/* =========================================
+   NAV ITEM
+========================================= */
 
 function NavItem({
   href,
@@ -246,34 +312,109 @@ function NavItem({
     <Link
       href={href}
       onClick={onClick}
+      title={collapsed ? label : undefined}
       className={`
+        group
+        relative
+        flex
+        items-center
+        gap-3
 
-flex items-center gap-3
+        rounded-xl
 
-px-3 py-2.5
+        px-3
+        py-2.5
 
-rounded-xl
+        text-[13px]
+        font-medium
 
-text-sm
+        transition-all
+        duration-200
 
-transition-all
+        ${collapsed ? "md:justify-center md:px-2" : ""}
 
-
-${
-  active
-    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-    : "text-zinc-400 hover:text-white hover:bg-zinc-900"
-}
-
-
-
-${collapsed ? "md:justify-center" : ""}
-
-`}
+        ${
+          active
+            ? `
+              bg-emerald-500/[0.09]
+              text-emerald-400
+              shadow-sm
+            `
+            : `
+              text-zinc-500
+              hover:bg-zinc-900/80
+              hover:text-zinc-200
+            `
+        }
+      `}
     >
-      <span>{icon}</span>
+      {/* Active Indicator */}
+      {active && (
+        <span
+          className="
+            absolute
+            left-0
+            top-1/2
+            h-6
+            w-0.5
+            -translate-y-1/2
+            rounded-full
+            bg-emerald-400
+            shadow-sm
+            shadow-emerald-400/50
+          "
+        />
+      )}
 
-      <span className={collapsed ? "md:hidden" : ""}>{label}</span>
+      {/* Icon Box */}
+      <span
+        className={`
+          flex
+          h-9
+          w-9
+          shrink-0
+          items-center
+          justify-center
+          rounded-lg
+
+          transition-all
+          duration-200
+
+          ${
+            active
+              ? `
+                bg-emerald-500/15
+                text-emerald-400
+              `
+              : `
+                bg-transparent
+                text-zinc-500
+                group-hover:bg-zinc-800
+                group-hover:text-zinc-200
+              `
+          }
+        `}
+      >
+        {icon}
+      </span>
+
+      {/* Label */}
+      <span
+        className={`
+          truncate
+          whitespace-nowrap
+          transition-all
+          duration-200
+          ${collapsed ? "md:hidden" : ""}
+        `}
+      >
+        {label}
+      </span>
+
+      {/* Active Arrow */}
+      {!collapsed && active && (
+        <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-400" />
+      )}
     </Link>
   );
 }

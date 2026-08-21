@@ -79,6 +79,7 @@ export interface IUser {
   status: UserStatus
   createdAt: string;
   updatedAt: string;
+  technicianProfile:ITechnicianProfile
 }
 
 export interface ITechnicianProfile {
@@ -150,9 +151,10 @@ export interface IReview{
    rating:number,
    comment:string,
    bookingId:string,
-    technician:string,
-    userId:string
-    createAt:string
+    technician:ITechnicianProfile,
+    userId:string,
+    createdAt:string,
+    customer:IUser
 }
 export enum CategoryStatus{
    ACTIVE="ACTIVE",

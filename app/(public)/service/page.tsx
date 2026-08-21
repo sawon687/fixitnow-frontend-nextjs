@@ -1,62 +1,26 @@
 import React from "react";
 import { AnimatePresence } from "framer-motion";
-import { Sparkles, Search, Wrench, X } from "lucide-react";
+import {
+  ArrowDown,
+  BriefcaseBusiness,
+  Sparkles,
+  Wrench,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import { getCategre } from "../../../commonService/getCategrie";
-
 import { LeftSideFilter } from "./_components/LeftSideFilter";
 import ServiceCard from "./_components/ServiceCard";
 import { getAllService } from "./_actions/serviceActions";
+
 import { ICategory, ISeachParmas, IService } from "../../../utils/type";
+
 import Searchfeild from "./_components/Searchfeild";
 import Header from "./_components/Header";
 import MotionAniBox from "../../../components/shared/MotionAniBox";
-
-const SafeLeftSideFilter = ({
-  locations,
-  categoryNames,
-}: {
-  locations: string[];
-  categoryNames: string[];
-}) => {
-  return (LeftSideFilter as any)({ locations, categoryNames });
-};
-
-// Categories Data provided by you
-const CATEGORIES_DATA = [
-  {
-    id: "502e9e64-021f-46d9-9163-bdd030366f35",
-    name: "Cleaning",
-    description:
-      "Home and office cleaning, deep cleaning, and maintenance services",
-    image:
-      "https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: "a0221fd5-6a71-457a-ad2c-a6052402d476",
-    name: "Plumbing",
-    description:
-      "Pipe repair, water leakage, faucet, sink, and bathroom plumbing services",
-    image:
-      "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: "979824a4-5ce0-477d-ba93-0ef45ae7fb03",
-    name: "Electrical",
-    description:
-      "Electrical wiring, fan, light, switch, socket, and other electrical repair services",
-    image:
-      "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=600&auto=format&fit=crop",
-  },
-  {
-    id: "8e728e2a-eda0-465e-adc3-0c6e95ffac22",
-    name: "AC & Refrigeration",
-    description:
-      "Air conditioner and refrigerator installation, servicing, and repair services",
-    image:
-      "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=600&auto=format&fit=crop",
-  },
-];
+import { CATEGORIES_DATA } from "../../../commonService/service";
+import Pagenation from './_components/Pagenation';
 
 export default async function ServicesPage({
   searchParams,
@@ -65,11 +29,11 @@ export default async function ServicesPage({
 }) {
   const params = await searchParams;
 
-  const reuslt = await getCategre();
+  const result = await getCategre();
 
   const filterService = (await getAllService(params)) || [];
 
-  const category = reuslt.data || [];
+  const category = result?.data?.allcategory || [];
 
   const locationtechnician = filterService.map(
     (s: IService) => s.technician.location,
@@ -81,61 +45,375 @@ export default async function ServicesPage({
   ] as string[];
 
   const categoryNames = category.map((c: ICategory) => c.name);
-  console.log("loatons page", locations);
-  console.log("loatons service", filterService);
-  console.log("loatons service", categoryNames);
-
-  console.log("params", params);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 px-4 py-12 md:px-8 lg:px-16 selection:bg-emerald-500 selection:text-slate-950 font-sans relative overflow-hidden">
-      {/* Soft Natural Background Glow */}
-      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-emerald-600/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-teal-600/5 rounded-full blur-[100px] pointer-events-none" />
+    <main className="relative min-h-screen overflow-hidden bg-[#070b0f] text-slate-100">
+      {/* =====================================================
+          BACKGROUND
+      ====================================================== */}
 
-      <div className="max-w-7xl mx-auto space-y-10 relative z-10">
-        {/* Header Section*/}
-        <Header
-          categoryNames={categoryNames}
-          CATEGORIES_DATA={CATEGORIES_DATA}
-        ></Header>
-        {/* Natural Search Bar */}
-        <Searchfeild />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div
+          className="
+            absolute -left-40 -top-40
+            h-[500px] w-[500px]
+            rounded-full
+            bg-emerald-500/[0.07]
+            blur-[130px]
+          "
+        />
 
-        {/* Main Grid Layout: Sidebar & Filtered Services Grid (2 Columns) */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 pt-4">
-          {/* left sidebar and filter */}
+        <div
+          className="
+            absolute right-[-180px] top-[25%]
+            h-[500px] w-[500px]
+            rounded-full
+            bg-cyan-500/[0.045]
+            blur-[130px]
+          "
+        />
 
-          <LeftSideFilter locations={locations} categoryNames={categoryNames} />
+        <div
+          className="
+            absolute bottom-[-200px] left-[30%]
+            h-[450px] w-[450px]
+            rounded-full
+            bg-emerald-500/[0.035]
+            blur-[120px]
+          "
+        />
+      </div>
 
-          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            <AnimatePresence>
-              {filterService.map((service: IService, index: number) => (
-                <ServiceCard service={service} key={index} />
-              ))}
-            </AnimatePresence>
+      {/* Subtle Grid */}
 
-            {filterService.length === 0 && (
-              <MotionAniBox
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="col-span-full text-center py-20 bg-slate-950/40 border border-slate-800/80 rounded-3xl backdrop-blur-md space-y-3"
+      <div
+        className="
+          pointer-events-none absolute inset-0 opacity-[0.025]
+          [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)]
+          [background-size:50px_50px]
+        "
+      />
+
+      {/* =====================================================
+          MAIN CONTAINER
+      ====================================================== */}
+
+      <div
+        className="
+          relative z-10
+          mx-auto w-full max-w-[1500px]
+          px-4 py-8
+          sm:px-6
+          lg:px-8
+          xl:px-10
+        "
+      >
+        {/* =====================================================
+            TOP HEADER
+        ====================================================== */}
+
+        <section className="mb-8">
+          <Header
+            categoryNames={categoryNames}
+            CATEGORIES_DATA={CATEGORIES_DATA}
+          />
+        </section>
+
+        {/* =====================================================
+            SEARCH AREA
+        ====================================================== */}
+
+        <section
+          className="
+            relative mb-8
+            overflow-hidden
+            rounded-2xl
+            border border-slate-800/80
+            bg-slate-900/60
+            p-4
+            shadow-[0_20px_60px_rgba(0,0,0,0.18)]
+            backdrop-blur-xl
+            sm:p-5
+          "
+        >
+          {/* Glow */}
+
+          <div
+            className="
+              pointer-events-none
+              absolute -right-20 -top-20
+              h-40 w-40
+              rounded-full
+              bg-emerald-500/10
+              blur-3xl
+            "
+          />
+
+          <div className="relative">
+            <div className="mb-3 flex items-center gap-2">
+              <div
+                className="
+                  flex h-7 w-7
+                  items-center justify-center
+                  rounded-lg
+                  bg-emerald-500/10
+                "
               >
-                <Wrench className="w-12 h-12 text-slate-600 mx-auto animate-bounce" />
-                <h3 className="text-lg font-semibold text-slate-300">
+                <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold text-slate-300">
+                  Find the right service
+                </p>
+
+                <p className="text-[10px] text-slate-600">
+                  Search from our trusted professionals
+                </p>
+              </div>
+            </div>
+
+            <Searchfeild />
+          </div>
+        </section>
+
+        {/* =====================================================
+            RESULT SUMMARY
+        ====================================================== */}
+
+        <div
+          className="
+            mb-5
+            flex flex-col gap-3
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+          "
+        >
+          <div>
+            <div className="flex items-center gap-2">
+              <BriefcaseBusiness className="h-4 w-4 text-emerald-400" />
+
+              <h2 className="text-sm font-bold text-white">
+                Available Services
+              </h2>
+
+              <span
+                className="
+                  rounded-full
+                  border border-slate-800
+                  bg-slate-900
+                  px-2 py-0.5
+                  text-[10px]
+                  font-semibold
+                  text-slate-500
+                "
+              >
+                {filterService.length}
+              </span>
+            </div>
+
+            <p className="mt-1 text-[11px] text-slate-600">
+              Explore services from verified professionals.
+            </p>
+          </div>
+
+          {/* Sort */}
+
+          <div
+            className="
+              flex items-center gap-2
+              text-[11px]
+              text-slate-600
+            "
+          >
+            <span>Sorted by</span>
+
+            <span
+              className="
+                inline-flex items-center gap-1
+                rounded-lg
+                border border-slate-800
+                bg-slate-900
+                px-2.5 py-1.5
+                font-medium
+                text-slate-400
+              "
+            >
+              Top Rated
+              <ArrowDown className="h-3 w-3" />
+            </span>
+          </div>
+        </div>
+
+        {/* =====================================================
+            MAIN CONTENT
+        ====================================================== */}
+
+        <div
+          className="
+            grid
+            grid-cols-1
+            gap-6
+            lg:grid-cols-[250px_minmax(0,1fr)]
+            xl:gap-8
+          "
+        >
+          {/* =================================================
+              SIDEBAR
+          ================================================== */}
+
+          <aside
+            className="
+              lg:sticky
+              lg:top-6
+              lg:self-start
+            "
+          >
+            <div
+              className="
+                overflow-hidden
+                rounded-2xl
+                border border-slate-800/80
+                bg-slate-900/55
+                shadow-xl
+                backdrop-blur-xl
+              "
+            >
+              {/* Sidebar Header */}
+
+              <div
+                className="
+                  border-b
+                  border-slate-800/80
+                  px-4 py-3
+                "
+              >
+                <div className="flex items-center gap-2">
+                  <div
+                    className="
+                      h-1.5 w-1.5
+                      rounded-full
+                      bg-emerald-400
+                      shadow-[0_0_10px_rgba(52,211,153,0.8)]
+                    "
+                  />
+
+                  <span className="text-xs font-bold text-slate-300">
+                    Filters
+                  </span>
+                </div>
+
+                <p className="mt-1 text-[10px] text-slate-600">
+                  Refine your search
+                </p>
+              </div>
+
+              {/* Filter */}
+
+              <div className="p-3">
+                <LeftSideFilter
+                  locations={locations}
+                  categoryNames={categoryNames}
+                />
+              </div>
+            </div>
+          </aside>
+
+          {/* =================================================
+              SERVICE GRID
+          ================================================== */}
+
+          <section className="min-w-0">
+            {filterService.length > 0 ? (
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-5
+                  md:grid-cols-2
+                  xl:grid-cols-3
+                "
+              >
+                <AnimatePresence mode="popLayout">
+                  {filterService.map((service: IService, index: number) => (
+                    <ServiceCard
+                      service={service}
+                      index={index}
+                      key={service.id}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+            ) : (
+              /* =============================================
+                 EMPTY STATE
+              ============================================== */
+
+              <MotionAniBox
+                initial={{
+                  opacity: 0,
+                  y: 15,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                }}
+                className="
+                  flex min-h-[420px]
+                  flex-col
+                  items-center
+                  justify-center
+                  rounded-2xl
+                  border border-slate-800
+                  bg-slate-900/50
+                  px-6
+                  text-center
+                  shadow-xl
+                  backdrop-blur-xl
+                "
+              >
+                <div
+                  className="
+                    mb-5
+                    flex h-16 w-16
+                    items-center justify-center
+                    rounded-2xl
+                    border border-slate-800
+                    bg-slate-950
+                    shadow-lg
+                  "
+                >
+                  <Wrench className="h-7 w-7 text-slate-600" />
+                </div>
+
+                <h3 className="text-base font-bold text-slate-200">
                   No services found
                 </h3>
-                <p className="text-slate-500 text-sm max-w-sm mx-auto">
-                  Try adjusting your search query, filter options, or price
-                  range to find available services.
+
+                <p
+                  className="
+                    mt-2
+                    max-w-sm
+                    text-xs
+                    leading-5
+                    text-slate-600
+                  "
+                >
+                  We couldn't find any services matching your current filters.
+                  Try changing your search or selecting different options.
                 </p>
               </MotionAniBox>
             )}
-          </div>
+          </section>
         </div>
-      </div>
 
-   
-    </div>
+        {/* =====================================================
+            PAGINATION
+        ====================================================== */}
+         <Pagenation filterService={filterService}></Pagenation>
+      
+      </div>
+    </main>
   );
 }

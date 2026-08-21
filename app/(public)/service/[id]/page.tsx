@@ -1,20 +1,20 @@
 import {
   Star,
-  Calendar as CalendarIcon,
   ShieldCheck,
   ArrowLeft,
   UserCheck,
   MapPin,
   Sparkles,
-  Clock,
+  Clock3,
   CheckCircle2,
-  ChevronRight,
+  BadgeCheck,
+  BriefcaseBusiness,
 } from "lucide-react";
 import Link from "next/link";
 import BookingFrom from "./_components/BookingFrom";
 import { singleService } from "./_actions/bookingAction";
-import { IService } from "../../../../utils/type";
-import { getMe } from '../../../../service/Profileme';
+import { getMe } from "../../../../service/Profileme";
+import { IService } from '../../../../utils/type';
 
 export default async function TechnicianProfilePage({
   params,
@@ -23,154 +23,375 @@ export default async function TechnicianProfilePage({
 }) {
   const { id } = await params;
 
-  const serviceDetail = (await singleService(id as string)) || [];
-    const user=await getMe()
-    console.log('user',user)
+  const serviceDetail:IService = await singleService(id);
+  const user = await getMe();
+
+  const technician = serviceDetail?.technician;
+
+  const rating = technician?.avgRating
+    ? Number(technician.avgRating).toFixed(1)
+    : "New";
+
+  const reviews = technician?.reviewsCount || 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 px-4 py-8 md:px-8 lg:px-16 selection:bg-teal-500 selection:text-slate-950">
-      <div className="max-w-6xl mx-auto space-y-6">
-        
-        {/* Navigation Breadcrumb / Back Button */}
-        <div className="flex items-center justify-between">
-          <Link
-            href="/service"
-            className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-teal-400 transition-colors bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-800/80"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Services
-          </Link>
-          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Live Expert Available
-          </span>
-        </div>
+    <main className="min-h-screen bg-[#070b10] text-white">
+      <div className="relative overflow-hidden">
+        <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-emerald-500/[0.07] blur-[120px]" />
+        <div className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-cyan-500/[0.05] blur-[130px]" />
 
-        {/* Main Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          
-          {/* Left Column: Service Overview & Technician Profile */}
-          <div className="lg:col-span-2 space-y-6">
-            
-            {/* Service Header Card */}
-            <div className="relative overflow-hidden p-6 md:p-8 rounded-3xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-2xl shadow-2xl">
-              <div className="absolute top-0 right-0 -mt-8 -mr-8 w-40 h-40 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-              
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1 rounded-lg bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-bold uppercase tracking-wider">
-                  Professional Maintenance
-                </span>
-              </div>
+        <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+          <div className="mb-7 flex items-center justify-between">
+            <Link
+              href="/service"
+              className="
+                group inline-flex items-center gap-2 rounded-xl
+                border border-slate-800 bg-slate-900/70
+                px-3.5 py-2.5 text-xs font-semibold text-slate-400
+                backdrop-blur-xl transition-all
+                hover:border-emerald-500/30
+                hover:bg-slate-900
+                hover:text-emerald-400
+              "
+            >
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              Back to Services
+            </Link>
 
-              <h1 className="text-2xl md:text-4xl font-black text-white mt-4 tracking-tight">
-                {serviceDetail.title}
-              </h1>
-              
-              <p className="text-slate-400 mt-4 leading-relaxed text-sm md:text-base font-normal">
-                {serviceDetail.description}
-              </p>
-
-              <div className="mt-8 pt-6 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <span className="text-xs text-slate-500 font-medium block uppercase tracking-wider">
-                    Total Service Cost
-                  </span>
-                  <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
-                    ৳{serviceDetail.price}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-slate-500 font-medium block uppercase tracking-wider">
-                    Billing Structure
-                  </span>
-                  <span className="text-sm font-bold text-slate-200 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 inline-block mt-1">
-                    {serviceDetail.priceType} Price Plan
-                  </span>
-                </div>
-              </div>
+            <div className="hidden items-center gap-2 rounded-full border border-emerald-500/15 bg-emerald-500/[0.06] px-3 py-1.5 text-[10px] font-bold text-emerald-400 sm:flex">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              AVAILABLE FOR BOOKING
             </div>
+          </div>
 
-            {/* Technician Profile Card */}
-            <div className="p-6 md:p-8 rounded-3xl bg-slate-900/70 border border-slate-800/80 backdrop-blur-2xl shadow-2xl space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <UserCheck className="w-5 h-5 text-teal-400" /> Assigned Expert Technician
-                </h3>
-                <span className="flex items-center gap-1 text-xs bg-teal-500/10 text-teal-300 px-2.5 py-1 rounded-lg border border-teal-500/20 font-semibold">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Verified Professional
-                </span>
-              </div>
+          <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
+            <div className="space-y-6">
+              <section
+                className="
+                  relative overflow-hidden rounded-[28px]
+                  border border-slate-800/80
+                  bg-slate-900/60
+                  shadow-[0_25px_80px_rgba(0,0,0,0.25)]
+                  backdrop-blur-2xl
+                "
+              >
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent" />
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-                <img
-                  src={serviceDetail?.technician?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80"}
-                  alt={serviceDetail?.technician?.technician?.name || "Technician"}
-                  className="w-20 h-20 rounded-2xl object-cover border-2 border-teal-500/30 shadow-lg"
-                />
-                <div className="space-y-1.5">
-                  <h4 className="text-xl font-extrabold text-white">
-                    {serviceDetail?.technician?.technician?.name}
-                  </h4>
-                  <p className="text-xs text-slate-400 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-teal-400" />{" "}
-                    {serviceDetail?.technician?.location} • Experience:{" "}
-                    <span className="text-slate-200 font-medium">{serviceDetail?.technician?.experience}</span>
-                  </p>
-                  <div className="flex items-center gap-1.5 text-amber-400 text-sm font-bold pt-0.5">
-                    <Star className="w-4 h-4 fill-amber-400" />
-                    <span>{serviceDetail?.technician?.avgRating || "4.9"}</span>
-                    <span className="text-slate-500 text-xs font-normal">
-                      ({serviceDetail?.technician?.reviewsCount || 42} verified reviews)
+                <div className="relative p-6 sm:p-8">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/15 bg-emerald-500/[0.06] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                      <Sparkles className="h-3 w-3" />
+                      {serviceDetail?.category?.name || "Home Service"}
                     </span>
+
+                    {serviceDetail?.priceType && (
+                      <span className="rounded-lg border border-slate-800 bg-slate-950/70 px-2.5 py-1.5 text-[10px] font-semibold text-slate-500">
+                        {serviceDetail.priceType}
+                      </span>
+                    )}
+                  </div>
+
+                  <h1 className="mt-5 max-w-3xl text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-[42px] lg:leading-[1.1]">
+                    {serviceDetail?.title}
+                  </h1>
+
+                  <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-400">
+                    {serviceDetail?.description ||
+                      "Professional home service delivered by a trusted and experienced technician."}
+                  </p>
+
+                  <div className="mt-7 flex flex-wrap items-center gap-3">
+                    <div className="flex items-center gap-2 rounded-xl border border-amber-500/10 bg-amber-500/[0.05] px-3 py-2">
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                      <span className="text-sm font-bold text-amber-300">
+                        {rating}
+                      </span>
+                      <span className="text-xs text-slate-600">
+                        ({reviews} reviews)
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-950/60 px-3 py-2">
+                      <MapPin className="h-4 w-4 text-emerald-400" />
+                      <span className="max-w-[180px] truncate text-xs font-medium text-slate-400">
+                        {technician?.location || "Location unavailable"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 flex flex-col gap-4 border-t border-slate-800/80 pt-6 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-600">
+                        Starting price
+                      </p>
+
+                      <div className="mt-1 flex items-baseline gap-2">
+                        <span className="text-4xl font-black tracking-tight text-white">
+                          ৳{serviceDetail?.price || 0}
+                        </span>
+
+                        {serviceDetail?.priceType === "Hourly" && (
+                          <span className="text-xs font-medium text-slate-600">
+                            / hour
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs text-slate-500">
+                      <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                      Secure & trusted service
+                    </div>
                   </div>
                 </div>
-              </div>
+              </section>
 
-              <blockquote className="text-slate-300 text-sm italic bg-slate-950/60 p-4 rounded-2xl border border-slate-800/60 relative">
-                <span className="absolute top-2 left-2 text-teal-500/20 text-3xl font-serif">“</span>
-                {serviceDetail?.technician?.bio || "Dedicated expert ready to solve your household requirements with safety and standard tools."}
-              </blockquote>
+              <section
+                className="
+                  overflow-hidden rounded-[28px]
+                  border border-slate-800/80
+                  bg-slate-900/60
+                  shadow-[0_20px_70px_rgba(0,0,0,0.2)]
+                  backdrop-blur-2xl
+                "
+              >
+                <div className="border-b border-slate-800/80 px-6 py-5 sm:px-8">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">
+                        Your Technician
+                      </p>
+
+                      <h2 className="mt-1 text-lg font-bold text-white">
+                        Meet the professional
+                      </h2>
+                    </div>
+
+                    <div className="hidden items-center gap-1.5 rounded-lg border border-emerald-500/15 bg-emerald-500/[0.05] px-2.5 py-1.5 text-[10px] font-bold text-emerald-400 sm:flex">
+                      <BadgeCheck className="h-3.5 w-3.5" />
+                      VERIFIED
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 sm:p-8">
+                  <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+                    <div className="relative shrink-0">
+                      <div className="absolute -inset-1 rounded-[22px] bg-gradient-to-br from-emerald-400/30 to-cyan-400/10 blur-sm" />
+
+                      <img
+                        src={
+                          technician?.avatar ||
+                          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80"
+                        }
+                        alt={
+                          technician?.users?.name ||
+                          "Professional Technician"
+                        }
+                        className="
+                          relative h-24 w-24 rounded-[20px]
+                          border border-slate-700
+                          object-cover
+                          shadow-xl
+                        "
+                      />
+
+                      <span className="absolute -bottom-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full border-4 border-slate-900 bg-emerald-400">
+                        <CheckCircle2 className="h-3 w-3 text-slate-950" />
+                      </span>
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-xl font-black text-white">
+                          {technician?.users?.name ||
+                            "Professional Technician"}
+                        </h3>
+
+                        <span className="rounded-md bg-emerald-500/10 px-2 py-1 text-[9px] font-bold text-emerald-400">
+                          VERIFIED
+                        </span>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
+                        <span className="flex items-center gap-1.5">
+                          <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+                          {technician?.location || "Location unavailable"}
+                        </span>
+
+                        <span className="flex items-center gap-1.5">
+                          <BriefcaseBusiness className="h-3.5 w-3.5 text-cyan-400" />
+                          {technician?.experience || "Experienced"}
+                        </span>
+
+                        <span className="flex items-center gap-1.5">
+                          <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                          {rating}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+                      <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                      <p className="mt-3 text-xs font-bold text-slate-200">
+                        Verified
+                      </p>
+                      <p className="mt-1 text-[10px] text-slate-600">
+                        Professional
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/50 p-4">
+                      <Clock3 className="h-5 w-5 text-cyan-400" />
+                      <p className="mt-3 text-xs font-bold text-slate-200">
+                        Fast Response
+                      </p>
+                      <p className="mt-1 text-[10px] text-slate-600">
+                        Usually under 15m
+                      </p>
+                    </div>
+
+                    <div className="col-span-2 rounded-2xl border border-slate-800 bg-slate-950/50 p-4 sm:col-span-1">
+                      <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+                      <p className="mt-3 text-xs font-bold text-slate-200">
+                        Top Rated
+                      </p>
+                      <p className="mt-1 text-[10px] text-slate-600">
+                        Customer loved
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 rounded-2xl border border-slate-800/80 bg-slate-950/50 p-5">
+                    <div className="mb-2 flex items-center gap-2">
+                      <UserCheck className="h-4 w-4 text-emerald-400" />
+                      <span className="text-xs font-bold text-slate-300">
+                        About the technician
+                      </span>
+                    </div>
+
+                    <p className="text-sm leading-6 text-slate-500">
+                      {technician?.bio ||
+                        "Dedicated professional focused on providing reliable, safe and high-quality home services."}
+                    </p>
+                  </div>
+                </div>
+              </section>
             </div>
 
+            <aside className="lg:sticky lg:top-6">
+              <div
+                className="
+                  overflow-hidden rounded-[28px]
+                  border border-slate-800/80
+                  bg-slate-900/90
+                  shadow-[0_25px_80px_rgba(0,0,0,0.3)]
+                  backdrop-blur-2xl
+                "
+              >
+                <div className="relative border-b border-slate-800/80 p-6">
+                  <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-emerald-500/[0.06] blur-3xl" />
+
+                  <div className="relative flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">
+                        Ready when you are
+                      </p>
+
+                      <h2 className="mt-2 text-xl font-black text-white">
+                        Book this service
+                      </h2>
+
+                      <p className="mt-1 text-xs leading-5 text-slate-500">
+                        Choose a convenient date and available time slot.
+                      </p>
+                    </div>
+
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/15 bg-emerald-500/[0.06] text-emerald-400">
+                      <Sparkles className="h-5 w-5" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 p-6">
+                  <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-slate-500">
+                        Service price
+                      </span>
+
+                      <span className="text-lg font-black text-white">
+                        ৳{serviceDetail?.price || 0}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 h-px bg-slate-800" />
+
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="text-xs text-slate-500">
+                        Pricing type
+                      </span>
+
+                      <span className="rounded-lg bg-slate-900 px-2.5 py-1 text-[10px] font-bold text-slate-300">
+                        {serviceDetail?.priceType || "Fixed"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 rounded-xl border border-slate-800/70 bg-slate-950/40 p-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/10">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-slate-300">
+                          Verified professional
+                        </p>
+                        <p className="text-[10px] text-slate-600">
+                          Quality checked technician
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 rounded-xl border border-slate-800/70 bg-slate-950/40 p-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cyan-500/10">
+                        <Clock3 className="h-4 w-4 text-cyan-400" />
+                      </div>
+
+                      <div>
+                        <p className="text-xs font-semibold text-slate-300">
+                          Flexible scheduling
+                        </p>
+                        <p className="text-[10px] text-slate-600">
+                          Pick your preferred time
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-1">
+                    <BookingFrom
+                      user={user}
+                      serviceDetail={serviceDetail}
+                    />
+                  </div>
+
+                  <p className="text-center text-[10px] leading-4 text-slate-600">
+                    By booking, you agree to our service terms and booking
+                    policy.
+                  </p>
+                </div>
+              </div>
+            </aside>
           </div>
-
-          {/* Right Column: Quick Summary & Action Trigger Card */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-8 p-6 md:p-8 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl backdrop-blur-xl space-y-6">
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-white">Instant Booking</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">Select slots & dispatch request</p>
-                </div>
-                <div className="w-10 h-10 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400">
-                  <Sparkles className="w-5 h-5" />
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center justify-between text-xs text-slate-400 py-2 border-b border-slate-800/60">
-                  <span>Response Time</span>
-                  <span className="text-slate-200 font-semibold">Under 15 Minutes</span>
-                </div>
-                <div className="flex items-center justify-between text-xs text-slate-400 py-2 border-b border-slate-800/60">
-                  <span>Service Guarantee</span>
-                  <span className="text-emerald-400 font-semibold">100% Satisfaction</span>
-                </div>
-                <div className="flex items-center justify-between text-xs text-slate-400 py-2">
-                  <span>Cancellation</span>
-                  <span className="text-slate-200 font-semibold">Free up to 1 hr prior</span>
-                </div>
-              </div>
-
-              {/* Booking Modal Form Component Triggered inside */}
-              <div className="pt-2">
-                <BookingFrom user={user} serviceDetail={serviceDetail} />
-              </div>
-
-            </div>
-          </div>
-
         </div>
       </div>
-    </div>
+    </main>
   );
 }
