@@ -1,6 +1,7 @@
 import React from 'react'
 import LoginFrom from './_components/LoginForm'
 import { Button } from '../../../components/ui/button'
+import Link from 'next/link'
 
 const LoginPage = () => {
   return (
@@ -76,12 +77,12 @@ const LoginPage = () => {
 
           <div className="text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <a
-              href="#"
+            <Link
+              href="/auth/login"
               className="font-semibold text-emerald-500 hover:underline underline-offset-4"
             >
               Sign up for free
-            </a>
+            </Link>
           </div>
         </div>
       </div>

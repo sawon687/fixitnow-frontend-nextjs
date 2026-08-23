@@ -451,7 +451,7 @@ const MyServices = async () => {
                 </p>
 
                 <div className="mt-6">
-                  <CreateServiceDialog />
+                  <CreateServiceDialog isEdit={false} />
                 </div>
 
               </div>

@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { TState } from '../../../../utils/type'
+import { IRole, TState } from '../../../../utils/type'
 
 
 export const loginAction = async (prevState:TState,fromdata: FormData) => {
@@ -33,8 +33,7 @@ export const loginAction = async (prevState:TState,fromdata: FormData) => {
   }
 
 
- console.log(result)
- console.log(result.data.accessToken,'refreshtoken',result.data.refreshToken)
+
 
        const cookieStore=await cookies()
        cookieStore.set('accessToken',result.data.accessToken,{
@@ -50,9 +49,11 @@ export const loginAction = async (prevState:TState,fromdata: FormData) => {
             path:'/',
             maxAge:60 * 60 * 24 * 7// 24 hour or 7 day
        })
-      
- 
 
-       redirect('/dashboard')
+
+       return result
 
 }
+ 
+    
+

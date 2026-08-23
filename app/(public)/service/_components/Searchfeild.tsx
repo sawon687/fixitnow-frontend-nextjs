@@ -12,47 +12,149 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 
 const Searchfeild = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  const router = useRouter();
-  const searchparams = useSearchParams();
+  // ==========================================
+  // SEARCH
+  // ==========================================
 
   const handleSearch = () => {
-    const params = new URLSearchParams(searchparams.toString());
+    const params = new URLSearchParams(
+      searchParams.toString()
+    );
 
-    if (searchQuery.trim()) {
-      params.set("search", searchQuery.trim());
+    const value = searchQuery.trim();
+
+    if (value) {
+      params.set("search", value);
     } else {
       params.delete("search");
     }
 
+    // New search হলে page 1
+    params.delete("page");
+
     startTransition(() => {
-      router.push(`/service?${params.toString()}`);
+      const queryString = params.toString();
+
+      router.push(
+        queryString
+          ? `/service?${queryString}`
+          : "/service",
+        {
+          scroll: false,
+        }
+      );
     });
   };
+
+  // ==========================================
+  // CLEAR SEARCH
+  // ==========================================
 
   const handleClear = () => {
     setSearchQuery("");
 
-    const params = new URLSearchParams(searchparams.toString());
+    const params = new URLSearchParams(
+      searchParams.toString()
+    );
+
     params.delete("search");
+    params.delete("page");
 
     startTransition(() => {
-      router.push(`/service?${params.toString()}`);
+      const queryString = params.toString();
+
+      router.push(
+        queryString
+          ? `/service?${queryString}`
+          : "/service",
+        {
+          scroll: false,
+        }
+      );
     });
+  };
+
+  // ==========================================
+  // INPUT CHANGE
+  // ==========================================
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+
+    setSearchQuery(value);
+
+  
+    if (!value.trim()) {
+      const params = new URLSearchParams(
+        searchParams.toString()
+      );
+
+      params.delete("search");
+      params.delete("page");
+
+      startTransition(() => {
+        const queryString = params.toString();
+
+        router.push(
+          queryString
+            ? `/service?${queryString}`
+            : "/service",
+          {
+            scroll: false,
+          }
+        );
+      });
+    }
+  };
+
+  // ==========================================
+  // ENTER KEY
+  // ==========================================
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      if (!isPending) {
+        handleSearch();
+      }
+    }
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.15 }}
+      initial={{
+        opacity: 0,
+        y: 12,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 0.4,
+        delay: 0.15,
+      }}
       className="mx-auto w-full max-w-3xl"
     >
-      {/* Search Wrapper */}
+      {/* ==========================================
+          SEARCH WRAPPER
+      ========================================== */}
+
       <div className="group relative">
+
         {/* Animated Glow */}
+
         <div
           className="
             absolute
@@ -71,7 +173,10 @@ const Searchfeild = () => {
           "
         />
 
-        {/* Search Box */}
+        {/* ==========================================
+            SEARCH BOX
+        ========================================== */}
+
         <div
           className="
             relative
@@ -93,7 +198,11 @@ const Searchfeild = () => {
             group-focus-within:shadow-emerald-500/5
           "
         >
-          {/* Search Icon */}
+
+          {/* ========================================
+              SEARCH ICON
+          ======================================== */}
+
           <div
             className="
               ml-2
@@ -114,24 +223,40 @@ const Searchfeild = () => {
             "
           >
             {isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
+              <Loader2
+                className="
+                  h-4
+                  w-4
+                  animate-spin
+                  text-emerald-400
+                "
+              />
             ) : (
-              <Search className="h-4 w-4 text-slate-500 transition-colors group-focus-within:text-emerald-400" />
+              <Search
+                className="
+                  h-4
+                  w-4
+                  text-slate-500
+                  transition-colors
+                  group-focus-within:text-emerald-400
+                "
+              />
             )}
           </div>
 
-          {/* Input */}
+          {/* ========================================
+              INPUT
+          ======================================== */}
+
           <div className="min-w-0 flex-1">
+
             <input
               type="text"
-              placeholder="Search services, repairs, cleaning..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch();
-                }
-              }}
+              placeholder="Search services, repairs, cleaning..."
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              disabled={isPending}
               className="
                 w-full
                 bg-transparent
@@ -142,27 +267,60 @@ const Searchfeild = () => {
                 text-slate-200
                 outline-none
                 placeholder:text-slate-600
+                disabled:cursor-not-allowed
                 md:text-[15px]
               "
             />
 
-            {/* Small hint */}
-            <div className="hidden items-center gap-1.5 px-2 pb-1 sm:flex">
-              <Sparkles className="h-2.5 w-2.5 text-emerald-500/60" />
+            {/* Small Hint */}
 
-              <span className="text-[9px] text-slate-700">
+            <div
+              className="
+                hidden
+                items-center
+                gap-1.5
+                px-2
+                pb-1
+                sm:flex
+              "
+            >
+              <Sparkles
+                className="
+                  h-2.5
+                  w-2.5
+                  text-emerald-500/60
+                "
+              />
+
+              <span
+                className="
+                  text-[9px]
+                  text-slate-700
+                "
+              >
                 Find trusted professionals near you
               </span>
             </div>
           </div>
 
-          {/* Clear Button */}
+          {/* ========================================
+              CLEAR BUTTON
+          ======================================== */}
+
           {searchQuery && (
             <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{
+                opacity: 0,
+                scale: 0.8,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
               type="button"
               onClick={handleClear}
+              disabled={isPending}
+              aria-label="Clear search"
               className="
                 flex
                 h-8
@@ -175,16 +333,25 @@ const Searchfeild = () => {
                 transition-all
                 hover:bg-slate-800
                 hover:text-slate-300
+                disabled:cursor-not-allowed
+                disabled:opacity-50
               "
             >
               <X className="h-4 w-4" />
             </motion.button>
           )}
 
-          {/* Search Button */}
+          {/* ========================================
+              SEARCH BUTTON
+          ======================================== */}
+
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={{
+              scale: 1.02,
+            }}
+            whileTap={{
+              scale: 0.97,
+            }}
             type="button"
             onClick={handleSearch}
             disabled={isPending}
@@ -211,7 +378,14 @@ const Searchfeild = () => {
           >
             {isPending ? (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                <Loader2
+                  className="
+                    h-3.5
+                    w-3.5
+                    animate-spin
+                  "
+                />
+
                 <span className="hidden sm:inline">
                   Searching
                 </span>
@@ -219,49 +393,17 @@ const Searchfeild = () => {
             ) : (
               <>
                 <span>Search</span>
-                <ArrowRight className="h-3.5 w-3.5" />
+
+                <ArrowRight
+                  className="
+                    h-3.5
+                    w-3.5
+                  "
+                />
               </>
             )}
           </motion.button>
         </div>
-      </div>
-
-      {/* Bottom Suggestions */}
-      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-        <span className="text-[10px] text-slate-700">
-          Popular:
-        </span>
-
-        {["AC Repair", "Cleaning", "Electrical", "Plumbing"].map(
-          (item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => {
-                setSearchQuery(item);
-
-                const params = new URLSearchParams(
-                  searchparams.toString()
-                );
-
-                params.set("search", item);
-
-                startTransition(() => {
-                  router.push(`/service?${params.toString()}`);
-                });
-              }}
-              className="
-                text-[10px]
-                font-medium
-                text-slate-600
-                transition-colors
-                hover:text-emerald-400
-              "
-            >
-              {item}
-            </button>
-          )
-        )}
       </div>
     </motion.div>
   );

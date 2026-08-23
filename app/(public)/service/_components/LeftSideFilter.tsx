@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, number } from "framer-motion";
 import {
   DollarSign,
   Filter,
@@ -11,7 +11,7 @@ import {
   ChevronDown,
   SlidersHorizontal,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type LeftSideFilterProps = {
   locations: string[];
@@ -22,35 +22,43 @@ export const LeftSideFilter = ({
   locations,
   categoryNames,
 }: LeftSideFilterProps) => {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+
+const  params=useSearchParams()
+const insialocation=params.get('location') || "All"
+ const insialCategory=params.get('category') || "All"
+ const insialPrice=params.get('price')||'0'
+ const insialRating=params.get("rating") || '0'
+  const [selectedCategory, setSelectedCategory] = useState(insialCategory);
   const [selectedLocation, setSelectedLocation] = useState(
-    locations[0] ?? ""
+    insialocation
   );
-  const [selectRating, setSelectRating] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [selectRating, setSelectRating] = useState(insialRating);
+  const [price, setPrice] = useState(insialPrice);
 
   const router = useRouter();
 
   useEffect(() => {
     const params = new URLSearchParams();
-
-    if (selectedLocation.trim()) {
+     const location=params.get('location')
+      const category=params.get('category')
+       const priceulr=params.get('price')
+    if (selectedLocation && selectedLocation.trim()!==location) {
       params.set("location", selectedLocation);
     }
 
-    if (selectedCategory.trim()) {
+    if (selectedCategory && selectedCategory.trim()!==category) {
       params.set("category", selectedCategory);
     }
-
-    if (selectRating > 0) {
+     
+    if (selectRating && selectRating !== priceulr && selectRating > 0) {
       params.set("rating", selectRating.toString());
     }
 
-    if (price > 0) {
+    if (price && price!==priceulr && Number(price) > 0  ) {
       params.set("price", price.toString());
     }
 
-    router.push(`/service?${params.toString()}`);
+    router.push(`/service?${params.toString()}`,{scroll:false});
   }, [
     selectedLocation,
     selectedCategory,
@@ -60,10 +68,10 @@ export const LeftSideFilter = ({
   ]);
 
   const resetFilters = () => {
-    setSelectedCategory("All");
-    setSelectedLocation(locations[0] ?? "");
-    setSelectRating(0);
-    setPrice(0);
+    setSelectedCategory('All');
+    setSelectedLocation('All');
+    setSelectRating('0');
+    setPrice('0');
   };
 
   return (
@@ -241,8 +249,8 @@ export const LeftSideFilter = ({
                   focus:ring-2
                   focus:ring-emerald-500/10
                 "
-              >
-                {locations.map((loc) => (
+              >   
+                {['All',...locations].map((loc) => (
                   <option key={loc} value={loc}>
                     {loc}
                   </option>
@@ -276,7 +284,7 @@ export const LeftSideFilter = ({
 
               <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 px-2 py-1">
                 <span className="text-[11px] font-bold text-amber-400">
-                  {selectRating > 0 ? `${selectRating.toFixed(1)}+` : "Any"}
+                  {Number(selectRating) > 0 ? `${Number(selectRating).toFixed(1)}+` : "Any"}
                 </span>
               </div>
             </div>
@@ -287,7 +295,7 @@ export const LeftSideFilter = ({
               max="5"
               step="0.1"
               value={selectRating}
-              onChange={(e) => setSelectRating(Number(e.target.value))}
+              onChange={(e) => setSelectRating(e.target.value)}
               className="
                 h-1.5 w-full
                 cursor-pointer
@@ -331,7 +339,7 @@ export const LeftSideFilter = ({
 
               <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-2 py-1">
                 <span className="text-[11px] font-bold text-emerald-400">
-                  {price > 0 ? `৳${price}` : "Any"}
+                  {Number(price) > 0 ? `৳${price}` : "Any"}
                 </span>
               </div>
             </div>
@@ -342,7 +350,7 @@ export const LeftSideFilter = ({
               max="3000"
               step="100"
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              onChange={(e) => setPrice(e.target.value)}
               className="
                 h-1.5 w-full
                 cursor-pointer

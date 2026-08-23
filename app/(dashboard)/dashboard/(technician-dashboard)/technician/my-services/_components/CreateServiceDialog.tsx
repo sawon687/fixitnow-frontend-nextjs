@@ -11,6 +11,8 @@ import {
   Layers3,
   CircleDollarSign,
   Sparkles,
+
+  Pencil,
 } from "lucide-react";
 
 import {
@@ -35,10 +37,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Category } from "../../../../../../../utils/type";
+import { Category, IService } from "../../../../../../../utils/type";
 import { createService } from "../_actions/serviceActions";
 import { getCategre } from "../../../../../../../commonService/getCategrie";
 import { toast } from "sonner";
+import Link from 'next/link';
 
 const initialState = {
   success: false,
@@ -48,16 +51,19 @@ const initialState = {
     message: string;
   }[],
 };
-
-const CreateServiceDialog = () => {
+type CreateDialog={
+  service?:IService,
+  isEdit:boolean
+}
+const CreateServiceDialog = ({service,isEdit}:CreateDialog) => {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const [title, setTitle] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [priceType, setPriceType] = useState("");
+  const [title, setTitle] = useState(service?.title);
+  const [categoryId, setCategoryId] = useState(service?.categoryId);
+  const [description, setDescription] = useState(service?.description);
+  const [price, setPrice] = useState(service?.price);
+  const [priceType, setPriceType] = useState(service?.priceType);
 
   const [state, action, isPending] = useActionState(
     createService,
@@ -95,7 +101,7 @@ const CreateServiceDialog = () => {
       setTitle("");
       setCategoryId("");
       setDescription("");
-      setPrice("");
+      setPrice(0);
       setPriceType("");
 
       setOpen(false);
@@ -119,7 +125,7 @@ const CreateServiceDialog = () => {
     setTitle("");
     setCategoryId("");
     setDescription("");
-    setPrice("");
+    setPrice(0);
     setPriceType("");
   };
 
@@ -130,16 +136,35 @@ const CreateServiceDialog = () => {
       resetForm();
     }
   };
-
+const isEditMode=Boolean(service?.id)
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       {/* Trigger */}
-      <DialogTrigger asChild>
-        <Button className="h-11 rounded-xl px-5 font-semibold shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
-          <Plus className="mr-2 h-4 w-4" />
-          Create Service
-        </Button>
-      </DialogTrigger>
+ 
+  {isEdit ? (
+    <DialogTrigger asChild>
+    <Button
+      type='button'
+      className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-500"
+    >
+      <Pencil size={16} />
+      <span>Edit</span>
+    </Button>
+    </DialogTrigger>
+  ) : (
+    <DialogTrigger asChild>
+      <Button
+        type="button"
+        className="h-11 rounded-xl bg-emerald-600 px-5 font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-emerald-500 hover:shadow-md"
+      >
+        <Plus className="mr-2 h-4 w-4" />
+        <span>Create Service</span>
+      </Button>
+    </DialogTrigger>
+  )}
+
+  {/* DialogContent এখানে থাকবে */}
+
 
       {/* Modal */}
       <DialogContent
@@ -224,6 +249,16 @@ const CreateServiceDialog = () => {
                   </p>
                 </div>
               </div>
+              {/* service id */}
+              {
+
+                 isEditMode&&<input type="hidden" name='serviceId' value={service?.id} />
+
+
+
+              }
+
+              <input type="hidden" name='mode' value={isEditMode?'edit':'create'} />
 
               <div className="grid gap-4 sm:grid-cols-2">
                 {/* Title */}
@@ -392,7 +427,13 @@ const CreateServiceDialog = () => {
                       type="number"
                       min="0"
                       value={price}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) =>
+                        setPrice(
+                          e.target.value === ""
+                            ? undefined
+                            : Number(e.target.value),
+                        )
+                      }
                       placeholder="1500"
                       className="
                         h-11

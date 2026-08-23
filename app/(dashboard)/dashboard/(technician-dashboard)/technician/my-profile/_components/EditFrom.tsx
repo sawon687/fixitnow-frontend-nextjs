@@ -1,9 +1,10 @@
 "use client";
 
 import { Camera, Loader2, Plus, X } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useActionState } from "react";
 import { updateProfile } from "../_actions/profileAction";
+import { IUser } from "../../../../../../../utils/type";
 
 const initialState = {
   success: false,
@@ -14,27 +15,51 @@ const EditForm = ({
   profile,
   onCancel,
 }: {
-  profile?: any;
+  profile?: IUser;
   onCancel?: () => void;
 }) => {
+  // =========================
+  // Skills
+  // =========================
   const [newSkill, setNewSkill] = useState("");
 
   const [skills, setSkills] = useState<string[]>(
-    profile?.skills || []
+    profile?.technicianProfile?.skills || [],
   );
 
-  const [photo, setPhoto] = useState(profile?.photo || "");
+  // =========================
+  // Image Preview
+  // =========================
+  const [photoPreview, setPhotoPreview] = useState(profile?.profilePhoto || "");
 
+  // =========================
+  // Experience
+  // =========================
   const [experience, setExperience] = useState<number>(
-    profile?.yearsOfExperience || 0
+    profile?.technicianProfile?.yearsOfExperience || 0,
   );
 
+  // =========================
+  // Server Action
+  // =========================
   const [state, formAction, isPending] = useActionState(
     updateProfile,
-    initialState
+    initialState,
   );
 
-  const isEditMode = Boolean(profile?.id);
+  // =========================
+  // Edit / Create Mode
+  // =========================
+  const isEditMode = Boolean(profile?.technicianProfile?.id);
+
+  // =========================
+  // Success
+  // =========================
+  useEffect(() => {
+    if (state.success) {
+      onCancel?.();
+    }
+  }, [state.success, onCancel]);
 
   // =========================
   // Add Skill
@@ -46,7 +71,12 @@ const EditForm = ({
 
     if (!skill) return;
 
-    if (!skills.includes(skill)) {
+    // Case insensitive duplicate check
+    const alreadyExists = skills.some(
+      (item) => item.toLowerCase() === skill.toLowerCase(),
+    );
+
+    if (!alreadyExists) {
       setSkills((prev) => [...prev, skill]);
     }
 
@@ -57,14 +87,39 @@ const EditForm = ({
   // Remove Skill
   // =========================
   const handleRemoveSkill = (skillToRemove: string) => {
-    setSkills((prev) =>
-      prev.filter((skill) => skill !== skillToRemove)
-    );
+    setSkills((prev) => prev.filter((skill) => skill !== skillToRemove));
+  };
+
+  // =========================
+  // Image Change
+  // =========================
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    // Optional validation
+    if (!file.type.startsWith("image/")) {
+      e.target.value = "";
+      return;
+    }
+
+    // 5MB limit
+    if (file.size > 5 * 1024 * 1024) {
+      e.target.value = "";
+      return;
+    }
+
+    // Only preview here.
+    // Actual File will automatically be submitted
+    // because input has name="photo".
+    const previewUrl = URL.createObjectURL(file);
+
+    setPhotoPreview(previewUrl);
   };
 
   return (
     <form action={formAction} className="space-y-6">
-
       {/* =========================
           SUCCESS / ERROR
       ========================== */}
@@ -89,15 +144,11 @@ const EditForm = ({
       )}
 
       {/* =========================
-          PROFILE ID
+          USER ID
           Only for UPDATE
       ========================== */}
       {isEditMode && (
-        <input
-          type="hidden"
-          name="technicianId"
-          value={profile.id}
-        />
+        <input type="hidden" name="userId" value={profile?.id || ""} />
       )}
 
       {/* =========================
@@ -124,8 +175,8 @@ const EditForm = ({
           p-5
         "
       >
+        {/* Image */}
         <div className="relative shrink-0">
-
           <div
             className="
               flex
@@ -141,10 +192,10 @@ const EditForm = ({
               text-zinc-500
             "
           >
-            {photo ? (
+            {photoPreview ? (
               <img
-                src={photo}
-                alt="Avatar"
+                src={photoPreview}
+                alt="Profile"
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -152,6 +203,7 @@ const EditForm = ({
             )}
           </div>
 
+          {/* Camera Button */}
           <label
             className="
               absolute
@@ -179,24 +231,21 @@ const EditForm = ({
               name="photo"
               className="hidden"
               accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-
-                if (file) {
-                  setPhoto(URL.createObjectURL(file));
-                }
-              }}
+              onChange={handlePhotoChange}
             />
           </label>
         </div>
 
+        {/* Text */}
         <div>
-          <h2 className="text-sm font-semibold text-white">
-            Profile Picture
-          </h2>
+          <h2 className="text-sm font-semibold text-white">Profile Picture</h2>
 
           <p className="mt-1 text-xs leading-5 text-zinc-500">
             Upload a professional photo of yourself.
+          </p>
+
+          <p className="mt-1 text-[10px] text-zinc-600">
+            JPG, PNG or WEBP • Max 5MB
           </p>
         </div>
       </div>
@@ -205,8 +254,9 @@ const EditForm = ({
           FORM FIELDS
       ========================== */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-        {/* Location */}
+        {/* =========================
+            Location
+        ========================== */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-zinc-300">
             Location
@@ -215,7 +265,7 @@ const EditForm = ({
           <input
             type="text"
             name="location"
-            defaultValue={profile?.location || ""}
+            defaultValue={profile?.technicianProfile?.location || ""}
             placeholder="e.g. Kushtia"
             className="
               h-10
@@ -231,11 +281,15 @@ const EditForm = ({
               outline-none
               transition
               focus:border-emerald-500/40
+              focus:ring-2
+              focus:ring-emerald-500/10
             "
           />
         </div>
 
-        {/* Experience */}
+        {/* =========================
+            Experience
+        ========================== */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-semibold text-zinc-300">
@@ -265,9 +319,7 @@ const EditForm = ({
             min="0"
             max="30"
             value={experience}
-            onChange={(e) =>
-              setExperience(Number(e.target.value))
-            }
+            onChange={(e) => setExperience(Number(e.target.value))}
             className="
               h-2
               w-full
@@ -275,9 +327,18 @@ const EditForm = ({
               accent-emerald-500
             "
           />
+
+          <div className="flex justify-between text-[10px] text-zinc-600">
+            <span>0</span>
+            <span>10</span>
+            <span>20</span>
+            <span>30+</span>
+          </div>
         </div>
 
-        {/* Bio */}
+        {/* =========================
+            Bio
+        ========================== */}
         <div className="space-y-2 sm:col-span-2">
           <label className="text-xs font-semibold text-zinc-300">
             Professional Bio
@@ -286,7 +347,7 @@ const EditForm = ({
           <textarea
             name="bio"
             rows={4}
-            defaultValue={profile?.bio || ""}
+            defaultValue={profile?.technicianProfile?.bio || ""}
             placeholder="Tell something about your experience..."
             className="
               w-full
@@ -303,6 +364,8 @@ const EditForm = ({
               outline-none
               transition
               focus:border-emerald-500/40
+              focus:ring-2
+              focus:ring-emerald-500/10
             "
           />
         </div>
@@ -311,7 +374,6 @@ const EditForm = ({
             SKILLS
         ========================== */}
         <div className="space-y-3 sm:col-span-2">
-
           <div>
             <label className="text-xs font-semibold text-zinc-300">
               Skills
@@ -322,20 +384,15 @@ const EditForm = ({
             </p>
           </div>
 
-          {/* Existing Skills */}
+          {/* =========================
+              Existing Skills
+          ========================== */}
           {skills.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {skills.map((skill, index) => (
                 <div key={`${skill}-${index}`}>
-
-                  {/* IMPORTANT:
-                      Send each skill separately
-                  */}
-                  <input
-                    type="hidden"
-                    name="skills"
-                    value={skill}
-                  />
+               
+                  <input type="hidden" name="skills" value={skill} />
 
                   <span
                     className="
@@ -357,9 +414,7 @@ const EditForm = ({
 
                     <button
                       type="button"
-                      onClick={() =>
-                        handleRemoveSkill(skill)
-                      }
+                      onClick={() => handleRemoveSkill(skill)}
                       className="
                         text-zinc-500
                         transition
@@ -374,18 +429,18 @@ const EditForm = ({
             </div>
           )}
 
-          {/* Add Skill */}
+          {/* =========================
+              Add Skill
+          ========================== */}
           <div className="flex gap-2">
-
             <input
               type="text"
               placeholder="Add a skill..."
               value={newSkill}
-              onChange={(e) =>
-                setNewSkill(e.target.value)
-              }
+              onChange={(e) => setNewSkill(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
+                  e.preventDefault();
                   handleAddSkill(e);
                 }
               }}
@@ -403,6 +458,8 @@ const EditForm = ({
                 outline-none
                 transition
                 focus:border-emerald-500/40
+                focus:ring-2
+                focus:ring-emerald-500/10
               "
             />
 
@@ -446,6 +503,7 @@ const EditForm = ({
           pt-5
         "
       >
+        {/* Cancel */}
         {onCancel && (
           <button
             type="button"
@@ -464,12 +522,15 @@ const EditForm = ({
               transition
               hover:bg-zinc-800
               hover:text-zinc-200
+              disabled:cursor-not-allowed
+              disabled:opacity-50
             "
           >
             Cancel
           </button>
         )}
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={isPending}
@@ -492,9 +553,7 @@ const EditForm = ({
             disabled:opacity-50
           "
         >
-          {isPending && (
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-          )}
+          {isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
 
           {isPending
             ? isEditMode

@@ -75,7 +75,8 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  role:IRole
+  role:IRole,
+  profilePhoto:string,
   status: UserStatus
   createdAt: string;
   updatedAt: string;

@@ -13,6 +13,7 @@ import {
   Sparkles,
   Award,
   Clock3,
+  MoveRight,
 } from "lucide-react";
 
 import EditForm from "./EditFrom";
@@ -60,7 +61,7 @@ console.log(technicianProfile)
         </div>
 
         {/* Edit button only when profile exists */}
-        {hasProfile && !isEditing && (
+        {hasProfile && !isEditing ?(
           <button
             onClick={() => setIsEditing(true)}
             className="
@@ -85,7 +86,30 @@ console.log(technicianProfile)
             <Edit3 className="h-3.5 w-3.5" />
             Edit Profile
           </button>
-        )}
+        ):  <button
+            onClick={() => setIsEditing(false)}
+            className="
+              inline-flex
+              h-9
+              items-center
+              justify-center
+              gap-2
+              rounded-xl
+              border
+              border-zinc-700
+              bg-zinc-900
+              px-4
+              text-xs
+              font-semibold
+              text-zinc-200
+              transition-all
+              hover:border-zinc-600
+              hover:bg-zinc-800
+            "
+          >
+            <MoveRight className="h-3.5 w-3.5" />
+            back
+          </button>}
 
       </div>
 
@@ -165,7 +189,7 @@ console.log(technicianProfile)
           </div>
 
           <EditForm
-            profile={technicianProfile}
+          profile={profile}
             onCancel={() => setIsEditing(false)}
           />
         </div>
@@ -289,7 +313,7 @@ console.log(technicianProfile)
                   >
                     <img
                       src={
-                        profile?.photo ||
+                        profile?.profilePhoto ||
                         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300"
                       }
                       alt={profile?.name || "Profile"}

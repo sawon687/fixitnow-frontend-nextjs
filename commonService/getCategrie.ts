@@ -16,7 +16,7 @@ export const getCategre=async()=>{
     })
   
          const result=  await res.json()
-         console.log('category sawon',result)
+      
         
     return result
      

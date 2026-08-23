@@ -224,7 +224,7 @@ export default async function TechnicianProfilePage({
 
                         <span className="flex items-center gap-1.5">
                           <BriefcaseBusiness className="h-3.5 w-3.5 text-cyan-400" />
-                          {technician?.experience || "Experienced"}
+                          {technician?.yearsOfExperience || "Experienced"}
                         </span>
 
                         <span className="flex items-center gap-1.5">

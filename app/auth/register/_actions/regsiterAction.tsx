@@ -1,38 +1,54 @@
-'use server'
+"use server";
 
-import { redirect } from 'next/navigation'
-import { TState } from '../../../../utils/type'
+import { imageBBLinkConvert } from '../../../../utils/imageLinkConvert';
+import { TState } from "../../../../utils/type";
 
-export const registerAction=async(stack:TState,formData:FormData)=>{
+export const registerAction = async (stack: TState, formData: FormData) => {
+  const name = formData.get("name")?.toString();
+  const email = formData.get("email")?.toString();
+  const role = formData.get("role")?.toString().toUpperCase();
+  const password = formData.get("password")?.toString();
 
-    const name=formData.get('name')
-    const email=formData.get('email')
-    const role=formData.get('role')?.toString().toUpperCase()
-    const password=formData.get('password')
+  const profilePhotoFile = formData.get("photo") as File | null;
 
-    const payload={
-        name,
-        email,
-        role,
-        password
-    }
-    console.log(payload)
+console.log('photo file',profilePhotoFile)
+  // =========================
+  // Upload Image to ImgBB
+  // =========================
+  const profileImage = await imageBBLinkConvert(profilePhotoFile as File);
 
-   const res = await fetch(`${process.env.API_URL}/api/auth/register`, {
+  console.log("photo", profileImage);
+  // =========================
+  // Register Payload
+  // =========================
+  const payload = {
+    name,
+    email,
+    role,
+    password,
+    profilePhoto: profileImage,
+  };
+
+  console.log("Register payload:", payload);
+
+  // =========================
+  // Register API
+  // =========================
+  const res = await fetch(`${process.env.API_URL}/api/auth/register`, {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
-    method: 'POST',
     body: JSON.stringify(payload),
-  })
+  });
 
-  const result= await res.json()
-  console.log('result',result)
-  
-  if(!result.success){
-    return result
+  const result = await res.json();
+
+  console.log("register result:", result);
+
+  if (!result.success) {
+    return result;
   }
 
-  redirect('/dashboard')
-
-}
+  return result;
+};

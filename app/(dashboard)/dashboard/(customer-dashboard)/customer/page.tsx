@@ -121,7 +121,7 @@ const {totalBookingCount,
       bookingInfo=[],
       pendingAmount={},
       cancelledPayment=0,
-      totalSpentPayment,
+      totalCompletedCount,
        review
         }=data
   const stats = [
@@ -154,7 +154,7 @@ const {totalBookingCount,
   },
   {
     title: "Total Spent",
-    value: `৳${totalSpentPayment}`,
+    value: `৳${paymentPaid?._sum?.amount}`,
     description: "Across all services",
     icon: Wallet,
     trend: "+৳4,200",

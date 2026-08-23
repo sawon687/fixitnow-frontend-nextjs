@@ -56,7 +56,14 @@ export default async function RootLayout({
         >
           <Navbar user={user} />
           <Toaster position="bottom-right" richColors />
-          {children}
+           <div
+          
+           >   
+       
+           
+            {children}
+           
+           </div>
           <Footer />
         </ThemeProvider>
       </body>

@@ -15,6 +15,7 @@ import {
   X,
   CreditCard,
   Clock,
+  Sparkles,
 } from "lucide-react";
 
 import { DashboardNavbarProps } from "../../../../utils/type";
@@ -168,51 +169,58 @@ const NavSidbar = ({
               px-2
             `}
           >
-            {/* Logo Icon */}
-            <div
-              className="
-                relative
-                flex h-11 w-11 shrink-0
-                items-center justify-center
-                rounded-2xl
-                bg-gradient-to-br
-                from-emerald-400
-                via-emerald-500
-                to-cyan-500
-                shadow-lg
-                shadow-emerald-500/20
-              "
+            <Link
+              href="/"
+              className="group flex shrink-0 items-center gap-3 rounded-xl px-2"
             >
-              <Wrench className="h-5 w-5 text-zinc-950" />
-
-              <span
+              <div
                 className="
-                  absolute
-                  -right-0.5
-                  -top-0.5
-                  h-2.5
-                  w-2.5
-                  rounded-full
-                  border-2
-                  border-zinc-950
-                  bg-emerald-300
-                "
-              />
-            </div>
+                            relative flex h-10 w-10 items-center justify-center
+                            overflow-hidden rounded-xl
+                            bg-gradient-to-br from-emerald-500 via-emerald-500 to-cyan-400
+                            shadow-lg shadow-blue-500/25
+                            transition-all duration-300
+                            group-hover:scale-105
+                            group-hover:shadow-blue-500/40
+                          "
+              >
+                <div className="absolute inset-0 bg-white/10" />
 
-            {/* Logo Text */}
-            {!isCollapsed && (
-              <div className="min-w-0">
-                <h1 className="truncate text-base font-bold tracking-tight text-white">
-                  FixItNow
-                </h1>
-
-                <p className="text-[11px] font-medium text-emerald-400">
-                  Home Services
-                </p>
+                <Wrench className="relative h-5 w-5 text-white" />
               </div>
-            )}
 
+              <div className="hidden sm:block">
+                <div className="flex items-center gap-1">
+               { !isCollapsed &&(
+
+                   <span
+                    className="
+                                bg-gradient-to-r
+                               from-emerald-500 via-emerald-500 to-cyan-400
+                                bg-clip-text
+                                text-lg
+                                font-extrabold
+                                tracking-tight
+                                text-transparent
+                              "
+                  >
+                    FixItNow
+                  </span>
+               )}
+
+                  <Sparkles className="h-3.5 w-3.5 text-cyan-500" />
+                </div>
+
+                {!isCollapsed && (
+                  <>
+                    {" "}
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-foreground/35">
+                      Home Service
+                    </p>
+                  </>
+                )}
+              </div>
+            </Link>
             {/* Mobile Close */}
             <button
               onClick={() => setIsMobileOpen(false)}

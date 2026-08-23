@@ -20,6 +20,9 @@ import {
 import Link from "next/link";
 import { singleService } from '../../../../../../(public)/service/[id]/_actions/bookingAction';
 import { IService } from '../../../../../../../utils/type';
+import CreateServiceDialog from '../_components/CreateServiceDialog';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '../../../../../../../components/ui/avatar';
 
 
 
@@ -59,7 +62,7 @@ const ServiceDetailspage = async ({ params }: ServiceDetailsPageProps) => {
   }
 
   const service:IService & {id:string}={}= await singleService(id);
-
+         console.log('serive id',service.technician?.users?.profilePhoto)
   if (!service) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#070a10] px-4 text-white">
@@ -85,6 +88,15 @@ const ServiceDetailspage = async ({ params }: ServiceDetailsPageProps) => {
       </div>
     );
   }
+
+  const technicianName = service.technician?.users?.name || "Professional Technician";
+  const initials = technicianName
+    .split(" ")
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <div className="min-h-screen bg-[#070a10] text-white">
@@ -228,13 +240,8 @@ const ServiceDetailspage = async ({ params }: ServiceDetailsPageProps) => {
 
                 {/* Actions */}
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <Link
-                    href={`/dashboard/technician/my-services/edit/${service.id}`}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold shadow-lg shadow-indigo-600/20 transition hover:bg-indigo-500"
-                  >
-                    <Pencil size={16} />
-                    Edit
-                  </Link>
+                  
+                  <CreateServiceDialog isEdit={true}  service={service}></CreateServiceDialog>
 
                   <Link
                     href={`/dashboard/technician/bookings?serviceId=${service.id}`}
@@ -397,10 +404,32 @@ const ServiceDetailspage = async ({ params }: ServiceDetailsPageProps) => {
 
               {/* Profile */}
               <div className="mt-6 flex items-center gap-4">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-xl font-bold shadow-lg shadow-indigo-500/10">
-                  {service.technician?.users?.name?.charAt(0)?.toUpperCase() ||
-                    "T"}
-                </div>
+               {/* ================= PROFILE AVATAR ================= */}
+<div className="relative shrink-0">
+
+  {/* Glow */}
+  <div className="absolute -inset-1 rounded-[22px] bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-400 opacity-30 blur-md" />
+
+  <Avatar className="relative h-24 w-24 rounded-[20px] border border-white/10 shadow-2xl md:h-28 md:w-28">
+
+    <AvatarImage
+      src={service.technician?.users?.profilePhoto || ""}
+      alt={service.technician?.users?.name || "Profile photo"}
+      className="object-cover"
+    />
+
+    <AvatarFallback className="rounded-[20px] bg-gradient-to-br from-indigo-500 to-purple-600 text-3xl font-bold text-white">
+      {initials}
+    </AvatarFallback>
+
+  </Avatar>
+
+  {/* Online indicator */}
+  <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-4 border-[#0d1320] bg-emerald-500">
+    <span className="h-2 w-2 rounded-full bg-white" />
+  </span>
+
+</div>
 
                 <div className="min-w-0">
                   <h4 className="truncate font-semibold">

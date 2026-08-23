@@ -2,13 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowRight, Lock, Mail } from "lucide-react";
-import { useActionState, useEffect } from 'react';
+import { ArrowRight, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useActionState, useEffect, useState } from 'react';
 import { loginAction } from '../_action/loginAction';
 import { toast } from 'sonner';
 
 const LoginDualLayout = () => {
    const[stack,action,pending]=useActionState(loginAction,'')
+     const [showPassword, setShowPassword] = useState(false);
    console.log(stack,'stack')
    useEffect(() => {
     if (!stack) return;
@@ -57,26 +58,43 @@ const LoginDualLayout = () => {
                     Forgot password?
                   </a>
                 </div>
+
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/70" />
+                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                    <Lock className="w-3.5 h-3.5" />
+                  </span>
+
                   <Input
                     id="password"
-                    type="password"
-                    name='password'
-                    placeholder="••••••••"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
                     required
-                    className="h-12 pl-10 bg-background/50 border-border/85 focus-visible:ring-emerald-500 rounded-xl transition-all"
+                    placeholder="••••••••••••"
+                    className="pl-9 pr-10 bg-slate-950/60 border-slate-800 focus-visible:ring-emerald-500 h-10 text-xs rounded-xl text-slate-100 placeholder:text-slate-600"
                   />
-                </div>
-              </div>
 
-              <Button
-                type="submit"
-                className="w-full h-12 font-medium mt-2 shadow-lg shadow-emerald-500/25 rounded-xl text-base transition-all hover:scale-[1.01] active:scale-[0.99] group bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white hover:opacity-95 border-0"
-              >
-                {pending?'Login...':"Sign In"} 
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-300 transition-colors"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full h-12 font-medium mt-2 shadow-lg shadow-emerald-500/25 rounded-xl text-base transition-all hover:scale-[1.01] active:scale-[0.99] group bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white hover:opacity-95 border-0"
+                >
+                  {pending ? 'Login...' : 'Sign In'}
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </div>
             </form>
   );
 };

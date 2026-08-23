@@ -26,6 +26,7 @@ export default async function TechnicianDashboardPage() {
   const earningsData=result?.revenueData
   const upcomingJobs:IBooking[]=result?.booking
   console.log('upcoming',upcomingJobs)
+  console.log('total erninge',totalRevunue)
   const stats = [
     {
       title: "Upcoming Jobs",
@@ -38,7 +39,7 @@ export default async function TechnicianDashboardPage() {
     },
     {
       title: "Total Earnings",
-      value: `৳${totalRevunue}`,
+      value: `৳${totalRevunue?._sum?.amount}`,
       change: "+18.7%",
       icon: DollarSign,
       description: "from completed jobs",

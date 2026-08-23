@@ -28,8 +28,10 @@ import {
 
 import Header from "./(public)/service/_components/Header";
 import { getCategre } from "../commonService/getCategrie";
-import { ICategory } from "../utils/type";
+import { ICategory, IService } from "../utils/type";
 import { CATEGORIES_DATA } from "../commonService/service";
+import { getAllService } from './(public)/service/_actions/serviceActions';
+import ServiceCard from './(public)/service/_components/ServiceCard';
 
 const categories = [
   {
@@ -54,32 +56,7 @@ const categories = [
   },
 ];
 
-const services = [
-  {
-    title: "Professional AC Repair",
-    category: "AC Repair",
-    price: "৳1,500",
-    rating: "4.9",
-    reviews: 124,
-    icon: Snowflake,
-  },
-  {
-    title: "Home Electrical Repair",
-    category: "Electrical",
-    price: "৳800",
-    rating: "4.8",
-    reviews: 98,
-    icon: Zap,
-  },
-  {
-    title: "Expert Plumbing Service",
-    category: "Plumbing",
-    price: "৳700",
-    rating: "4.9",
-    reviews: 86,
-    icon: Droplets,
-  },
-];
+
 
 const areas = [
   "Dhaka",
@@ -92,7 +69,7 @@ const areas = [
 
 export default async function HomePage() {
   const result = await getCategre();
-
+  const {serviceInfo:service}=await getAllService()
   const category = result?.data?.allcategory || [];
 
   const categoryNames = category.map((c: ICategory) => c.name);
@@ -462,195 +439,9 @@ export default async function HomePage() {
 
           <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
 
-       {services.map((service) => {
-  const Icon = service.icon;
-
-  return (
-    <div
-      key={service.title}
-      className="
-        group relative overflow-hidden rounded-2xl
-        border border-zinc-800
-        bg-zinc-900/80
-        transition-all duration-300
-        hover:-translate-y-1
-        hover:border-emerald-500/30
-        hover:shadow-[0_20px_50px_rgba(16,185,129,0.07)]
-      "
-    >
-      {/* Top Visual */}
-      <div
-        className="
-          relative h-40 overflow-hidden
-          bg-gradient-to-br
-          from-emerald-500/[0.08]
-          via-zinc-900
-          to-cyan-500/[0.06]
-        "
-      >
-        {/* Glow */}
-        <div
-          className="
-            absolute -right-16 -top-16
-            h-36 w-36 rounded-full
-            bg-emerald-500/10
-            blur-3xl
-            transition-all duration-500
-            group-hover:bg-emerald-500/20
-          "
-        />
-
-        {/* Grid */}
-        <div
-          className="
-            absolute inset-0 opacity-[0.035]
-            [background-image:linear-gradient(#fff_1px,transparent_1px),linear-gradient(90deg,#fff_1px,transparent_1px)]
-            [background-size:24px_24px]
-          "
-        />
-
-        {/* Category */}
-        <div className="absolute left-4 top-4">
-          <span
-            className="
-              rounded-lg
-              border border-emerald-500/20
-              bg-emerald-500/10
-              px-2.5 py-1.5
-              text-[10px] font-bold uppercase
-              tracking-wider text-emerald-400
-              backdrop-blur-md
-            "
-          >
-            {service.category}
-          </span>
-        </div>
-
-        {/* Rating */}
-        <div
-          className="
-            absolute right-4 top-4
-            flex items-center gap-1.5
-            rounded-lg
-            border border-zinc-700/70
-            bg-zinc-950/70
-            px-2.5 py-1.5
-            backdrop-blur-md
-          "
-        >
-          <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-
-          <span className="text-[10px] font-semibold text-zinc-300">
-            {service.rating}
-          </span>
-        </div>
-
-        {/* Icon */}
-        <div
-          className="
-            absolute bottom-5 left-5
-            flex h-11 w-11
-            items-center justify-center
-            rounded-xl
-            border border-zinc-700
-            bg-zinc-950/90
-            text-emerald-400
-            shadow-xl
-            transition-all duration-300
-            group-hover:border-emerald-500/30
-            group-hover:bg-emerald-500/10
-          "
-        >
-          <Icon className="h-5 w-5" />
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-5">
-        <h3
-          className="
-            line-clamp-1
-            text-base font-bold
-            tracking-tight text-white
-            transition-colors duration-300
-            group-hover:text-emerald-300
-          "
-        >
-          {service.title}
-        </h3>
-
-        <p className="mt-1.5 text-xs text-zinc-500">
-          Professional & trusted service
-        </p>
-
-        {/* Footer */}
-        <div
-          className="
-            mt-5 flex items-center
-            justify-between
-            border-t border-zinc-800
-            pt-4
-          "
-        >
-          {/* Price */}
-          <div>
-            <p className="text-[9px] font-medium uppercase tracking-wider text-zinc-600">
-              Starting from
-            </p>
-
-            <p className="mt-0.5 text-lg font-bold text-emerald-400">
-              {service.price}
-            </p>
-          </div>
-
-          {/* Details */}
-          <Link
-            href="/service"
-            className="
-              group/link
-              inline-flex items-center gap-1.5
-              rounded-xl
-              border border-zinc-700
-              bg-zinc-950/50
-              px-3.5 py-2
-              text-[11px] font-semibold
-              text-zinc-300
-              transition-all duration-200
-              hover:border-emerald-500/30
-              hover:bg-emerald-500/10
-              hover:text-emerald-400
-            "
-          >
-            View Details
-
-            <ChevronRight
-              className="
-                h-3.5 w-3.5
-                transition-transform duration-200
-                group-hover/link:translate-x-0.5
-              "
-            />
-          </Link>
-        </div>
-      </div>
-
-      {/* Bottom Accent */}
-      <div
-        className="
-          absolute bottom-0 left-1/2
-          h-px w-0
-          -translate-x-1/2
-          bg-gradient-to-r
-          from-transparent
-          via-emerald-400
-          to-transparent
-          transition-all duration-500
-          group-hover:w-2/3
-        "
-      />
-    </div>
-  );
-})}
+       {service?.slice(0,3).map((service:IService) => (
+    <ServiceCard key={service.id} service={service}></ServiceCard>
+  ))}
 
           </div>
 
