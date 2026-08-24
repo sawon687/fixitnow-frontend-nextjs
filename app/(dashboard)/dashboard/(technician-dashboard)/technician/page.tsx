@@ -11,22 +11,44 @@ import {
 } from "lucide-react";
 
 import Link from "next/link";
-import { getTecnichianDashboard } from './_actions/technichinActions';
-import { IBooking } from '../../../../../utils/type';
-import BookingStatusColor from '../../../../../components/shared/BookingStatusColor';
+import { getTecnichianDashboard } from "./_actions/technichinActions";
+import { IBooking } from "../../../../../utils/type";
+import BookingStatusColor from "../../../../../components/shared/BookingStatusColor";
 
+interface RevenueData {
+  month: string;
+  revenue: number;
+}
 
 export default async function TechnicianDashboardPage() {
-  // Dashboard summary information
-  const result=await getTecnichianDashboard()
-  const valibileBookingCount=result?.avalibileBookingCount
-  const totalRevunue=result?.totalRevunue
-  const reqBookingCount=result?.reqBookingCount
-  const completeBooking=result?.completeBooking
-  const earningsData=result?.revenueData
-  const upcomingJobs:IBooking[]=result?.booking
-  console.log('upcoming',upcomingJobs)
-  console.log('total erninge',totalRevunue)
+  // =========================
+  // Dashboard Data
+  // =========================
+  const result = await getTecnichianDashboard();
+
+  // Safe fallback values
+  const valibileBookingCount = result?.avalibileBookingCount ?? 0;
+  const totalRevunue = result?.totalRevunue;
+  const reqBookingCount = result?.reqBookingCount ?? 0;
+  const completeBooking = result?.completeBooking ?? 0;
+
+  // IMPORTANT:
+  // API থেকে undefined/null আসলেও যেন map() error না হয়
+  const earningsData: RevenueData[] = result?.revenueData ?? [];
+
+  // IMPORTANT:
+  // API থেকে booking undefined/null আসলেও যেন
+  // length/map() error না হয়
+  const upcomingJobs: IBooking[] = result?.booking ?? [];
+
+  console.log("Technician dashboard result:", result);
+  console.log("Upcoming jobs:", upcomingJobs);
+  console.log("Total earnings:", totalRevunue);
+  console.log("Revenue data:", earningsData);
+
+  // =========================
+  // Stats
+  // =========================
   const stats = [
     {
       title: "Upcoming Jobs",
@@ -39,7 +61,9 @@ export default async function TechnicianDashboardPage() {
     },
     {
       title: "Total Earnings",
-      value: `৳${totalRevunue?._sum?.amount}`,
+      value: `৳${Number(totalRevunue?._sum?.amount ?? 0).toLocaleString(
+        "en-BD",
+      )}`,
       change: "+18.7%",
       icon: DollarSign,
       description: "from completed jobs",
@@ -66,21 +90,23 @@ export default async function TechnicianDashboardPage() {
     },
   ];
 
-
-
-  // Highest earning value is used to calculate chart bar height
+  // =========================
+  // Maximum Revenue
+  // =========================
   const maxEarning = Math.max(
-    ...earningsData.map((item:{month:string, revenue:number}) => item.revenue),
-    1
+    ...earningsData.map((item) => Number(item.revenue) || 0),
+    1,
   );
 
-
-
+  // =========================
+  // Page
+  // =========================
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
       <div className="mx-auto max-w-7xl space-y-6 p-4 sm:p-6">
-
-        {/* Dashboard header */}
+        {/* =========================
+            Dashboard Header
+        ========================== */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2">
@@ -102,7 +128,7 @@ export default async function TechnicianDashboardPage() {
             </p>
           </div>
 
-          {/* Technician availability */}
+          {/* Technician Availability */}
           <div className="flex w-fit items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50/70 px-4 py-3 shadow-sm dark:border-emerald-500/20 dark:bg-emerald-500/10">
             <div className="relative flex h-3 w-3">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -111,9 +137,7 @@ export default async function TechnicianDashboardPage() {
             </div>
 
             <div>
-              <p className="text-xs text-slate-400">
-                Current status
-              </p>
+              <p className="text-xs text-slate-400">Current status</p>
 
               <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                 Available for Jobs
@@ -122,7 +146,9 @@ export default async function TechnicianDashboardPage() {
           </div>
         </div>
 
-        {/* Summary cards */}
+        {/* =========================
+            Summary Cards
+        ========================== */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => {
             const Icon = stat.icon;
@@ -137,8 +163,7 @@ export default async function TechnicianDashboardPage() {
 
                 <div className="relative">
                   <div className="flex items-center justify-between">
-
-                    {/* Card icon */}
+                    {/* Card Icon */}
                     <div
                       className={`flex h-11 w-11 items-center justify-center rounded-xl ${stat.iconBg}`}
                     >
@@ -171,10 +196,11 @@ export default async function TechnicianDashboardPage() {
           })}
         </div>
 
-        {/* Earnings overview */}
+        {/* =========================
+            Earnings Overview
+        ========================== */}
         <div className="rounded-2xl border bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-
-          {/* Chart header */}
+          {/* Chart Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -198,60 +224,65 @@ export default async function TechnicianDashboardPage() {
             </div>
           </div>
 
-          {/* Earnings chart */}
+          {/* Earnings Chart */}
           <div className="mt-8 flex h-64 items-end gap-3 sm:gap-5">
-            {earningsData.map((item:{month:string, revenue:number}) => {
-              const height = `${Math.max(
-                (item.revenue / maxEarning) * 100,
-                5
-              )}%`;
+            {earningsData.length > 0 ? (
+              earningsData.map((item) => {
+                const revenue = Number(item.revenue) || 0;
 
-              return (
-                <div
-                  key={item.month}
-                  className="group flex h-full flex-1 flex-col justify-end"
-                >
-                  <div className="relative flex h-full items-end">
+                const height = `${Math.max((revenue / maxEarning) * 100, 5)}%`;
 
-                    {/* Revenue tooltip */}
-                    <div className="absolute -top-9 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-900 px-2.5 py-1.5 text-[11px] font-medium text-white shadow-lg group-hover:block dark:bg-white dark:text-slate-900">
-                      ৳{item.revenue.toLocaleString("en-BD")}
+                return (
+                  <div
+                    key={item.month}
+                    className="group flex h-full flex-1 flex-col justify-end"
+                  >
+                    <div className="relative flex h-full items-end">
+                      {/* Revenue Tooltip */}
+                      <div className="absolute -top-9 left-1/2 z-10 hidden -translate-x-1/2 whitespace-nowrap rounded-lg bg-slate-900 px-2.5 py-1.5 text-[11px] font-medium text-white shadow-lg group-hover:block dark:bg-white dark:text-slate-900">
+                        ৳{revenue.toLocaleString("en-BD")}
+                      </div>
+
+                      {/* Chart Bar */}
+                      <div
+                        style={{ height }}
+                        className="
+                          w-full
+                          min-w-[20px]
+                          rounded-t-xl
+                          bg-gradient-to-t
+                          from-blue-600
+                          via-indigo-500
+                          to-violet-400
+                          shadow-sm
+                          transition-all
+                          duration-300
+                          group-hover:from-blue-700
+                          group-hover:via-indigo-600
+                          group-hover:to-violet-500
+                        "
+                      />
                     </div>
 
-                    {/* Gradient chart bar */}
-                    <div
-                      style={{ height }}
-                      className="
-                        w-full
-                        min-w-[20px]
-                        rounded-t-xl
-                        bg-gradient-to-t
-                        from-blue-600
-                        via-indigo-500
-                        to-violet-400
-                        shadow-sm
-                        transition-all
-                        duration-300
-                        group-hover:from-blue-700
-                        group-hover:via-indigo-600
-                        group-hover:to-violet-500
-                      "
-                    />
+                    <span className="mt-3 text-center text-xs font-medium text-slate-400">
+                      {item.month}
+                    </span>
                   </div>
-
-                  <span className="mt-3 text-center text-xs font-medium text-slate-400">
-                    {item.month}
-                  </span>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
+                No earnings data available
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Upcoming jobs */}
+        {/* =========================
+            Upcoming Jobs
+        ========================== */}
         <div className="overflow-hidden rounded-2xl border bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-
-          {/* Table header */}
+          {/* Table Header */}
           <div className="flex flex-col gap-3 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
             <div>
               <div className="flex items-center gap-2">
@@ -277,118 +308,132 @@ export default async function TechnicianDashboardPage() {
             </Link>
           </div>
 
-          {/* Jobs table */}
+          {/* Jobs Table */}
           <div className="overflow-x-auto">
             <table className="w-full min-w-[850px] text-left text-sm">
-
               <thead className="border-b bg-slate-50/70 text-xs uppercase tracking-wide text-slate-500 dark:border-slate-800 dark:bg-slate-800/30 dark:text-slate-400">
                 <tr>
-                  <th className="px-5 py-3 font-medium">
-                    Booking
-                  </th>
+                  <th className="px-5 py-3 font-medium">Booking</th>
 
-                  <th className="px-5 py-3 font-medium">
-                    Customer
-                  </th>
+                  <th className="px-5 py-3 font-medium">Customer</th>
 
-                  <th className="px-5 py-3 font-medium">
-                    Service
-                  </th>
+                  <th className="px-5 py-3 font-medium">Service</th>
 
-                  <th className="px-5 py-3 font-medium">
-                    Schedule
-                  </th>
+                  <th className="px-5 py-3 font-medium">Schedule</th>
 
-                  <th className="px-5 py-3 font-medium">
-                    Location
-                  </th>
+                  <th className="px-5 py-3 font-medium">Location</th>
 
-                  <th className="px-5 py-3 font-medium">
-                    Amount
-                  </th>
+                  <th className="px-5 py-3 font-medium">Amount</th>
 
-                  <th className="px-5 py-3 font-medium">
-                    Status
-                  </th>
+                  <th className="px-5 py-3 font-medium">Status</th>
                 </tr>
               </thead>
 
               <tbody className="divide-y dark:divide-slate-800">
-                {upcomingJobs.map((job:IBooking) => (
-                  <tr
-                    key={job.id}
-                    className="transition-colors hover:bg-blue-50/40 dark:hover:bg-blue-500/5"
-                  >
+                {upcomingJobs.length > 0 ? (
+                  upcomingJobs.map((job: IBooking) => (
+                    <tr
+                      key={job.id}
+                      className="transition-colors hover:bg-blue-50/40 dark:hover:bg-blue-500/5"
+                    >
+                      {/* Booking ID */}
+                      <td className="px-5 py-4">
+                        <span className="font-semibold text-blue-600 dark:text-blue-400">
+                          {job.id?.slice(0, 13)}...
+                        </span>
+                      </td>
 
-                    {/* Booking ID */}
-                    <td className="px-5 py-4">
-                      <span className="font-semibold text-blue-600 dark:text-blue-400">
-                        {job.id.slice(0,13)}...
-                      </span>
-                    </td>
+                      {/* Customer */}
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-500/10">
+                            <User className="h-4 w-4 text-blue-500" />
+                          </div>
 
-                    {/* Customer */}
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-500/10">
-                          <User className="h-4 w-4 text-blue-500" />
+                          <span className="text-slate-700 dark:text-slate-300">
+                            {job.customer?.name ?? "Unknown Customer"}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Service */}
+                      <td className="px-5 py-4 text-slate-600 dark:text-slate-300">
+                        {job.service?.category?.name ?? "Unknown Service"}
+                      </td>
+
+                      {/* Schedule */}
+                      <td className="px-5 py-4">
+                        <div>
+                          <p className="font-medium text-slate-700 dark:text-slate-300">
+                            {job.createdAt
+                              ? new Date(job.createdAt).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    month: "short",
+                                    day: "2-digit",
+                                    year: "numeric",
+                                  },
+                                )
+                              : "N/A"}
+                          </p>
+
+                          <p className="mt-1 text-xs text-slate-400">
+                            {job.createdAt
+                              ? new Date(job.createdAt).toLocaleTimeString()
+                              : "N/A"}
+                          </p>
+                        </div>
+                      </td>
+
+                      {/* Location */}
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
+                          <MapPin className="h-4 w-4 text-blue-500" />
+                          {job.address ?? "No address"}
+                        </div>
+                      </td>
+
+                      {/* Amount */}
+                      <td className="px-5 py-4">
+                        <span className="font-semibold text-slate-900 dark:text-white">
+                          ৳
+                          {Number(job.totalAmount ?? 0).toLocaleString("en-BD")}
+                        </span>
+                      </td>
+
+                      {/* Status */}
+                      <td className="px-5 py-4">
+                        <BookingStatusColor status={job.status} />
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="px-5 py-12 text-center">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                          <CalendarCheck className="h-6 w-6 text-slate-400" />
                         </div>
 
-                        <span className="text-slate-700 dark:text-slate-300">
-                          {job.customer?.name}
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Service */}
-                    <td className="px-5 py-4 text-slate-600 dark:text-slate-300">
-                      {job.service?.category?.name}
-                    </td>
-
-                    {/* Schedule */}
-                    <td className="px-5 py-4">
-                      <div>
                         <p className="font-medium text-slate-700 dark:text-slate-300">
-                          {new Date(job?.createdAt).toLocaleDateString('en-Us',{
-                            month:"short",
-                            day:'2-digit',
-                            year:"numeric"
-                          })}
+                          No upcoming jobs
                         </p>
 
                         <p className="mt-1 text-xs text-slate-400">
-                          {new Date(job?.createdAt).toLocaleTimeString()}
+                          You don't have any scheduled jobs yet.
                         </p>
                       </div>
                     </td>
-
-                    {/* Location */}
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300">
-                        <MapPin className="h-4 w-4 text-blue-500" />
-                        {job.address}
-                      </div>
-                    </td>
-
-                    {/* Amount */}
-                    <td className="px-5 py-4">
-                      <span className="font-semibold text-slate-900 dark:text-white">
-                        ৳{job.totalAmount?.toLocaleString("en-BD")}
-                      </span>
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-5 py-4">
-                      <BookingStatusColor status={job?.status}/>
-                    </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        {/* Bottom information */}
+        {/* =========================
+            Bottom Information
+        ========================== */}
         <div className="flex items-center gap-3 rounded-2xl border bg-white px-5 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
             <CheckCircle2 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
@@ -400,11 +445,11 @@ export default async function TechnicianDashboardPage() {
             </p>
 
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              You have completed 128 jobs with a strong service record.
+              You have completed {completeBooking} jobs with a strong service
+              record.
             </p>
           </div>
         </div>
-
       </div>
     </div>
   );
