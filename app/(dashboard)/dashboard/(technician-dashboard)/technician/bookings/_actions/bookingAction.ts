@@ -43,5 +43,10 @@ export const getAllBooking=async()=>{
       
              const result=  await res.json()
              console.log('results data',result)
+             const payment=result?.data
+                console.log('payment',payment)
+             const bo=payment.map(p=> p?.payment)
+
+             console.log('booking payment',bo)
         return result
 }

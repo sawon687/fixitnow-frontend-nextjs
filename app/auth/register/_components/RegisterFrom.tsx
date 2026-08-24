@@ -36,7 +36,8 @@ const RegisterFrom = () => {
     }
 
     if (!stack.success || stack.errors?.length) {
-      toast.error(stack.errors?.[0]?.message);
+      toast.error(stack.errors?.[0]?.message||stack.errormessage);
+      setPreview('')
     }
   }, [stack]);
 

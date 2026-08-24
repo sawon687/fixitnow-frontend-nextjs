@@ -78,7 +78,7 @@ const LoginPage = () => {
           <div className="text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
             <Link
-              href="/auth/login"
+              href="/auth/register"
               className="font-semibold text-emerald-500 hover:underline underline-offset-4"
             >
               Sign up for free

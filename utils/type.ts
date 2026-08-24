@@ -35,18 +35,7 @@ export interface Category {
   createdAt: string;
 }
 
-// export interface ServiceItem {
-//   id: string;
-//   technicianId: string;
-//   categoryId: string;
-//   title: string;
-//   description: string;
-//   price: number;
-//   priceType: 'Fixed' | 'Hourly';
-//   isActive: boolean;
-//   createdAt: string;
 
-// }
 
 export interface ISeachParmas{
   category:string,
@@ -135,7 +124,7 @@ export interface IBooking {
   serviceId: string;
   scheduledDate: string;
   address: string;
-  status: "ACCEPTED" | "PENDING" | "CANCELLED" | "COMPLETED";
+  status: BookingStatus
   startTime: string;
   totalAmount: number;
   cancelledAt: string | null;
@@ -146,6 +135,7 @@ export interface IBooking {
  review?:IReview
  service:IService
  customer:IUser
+ payment:Payment
 }
 
 export interface IReview{
@@ -171,4 +161,23 @@ export interface Category {
   _count: {
     services: number;
   };
+}
+
+export interface Payment {
+  id: string;
+  transactionId: string;
+  bookingId: string;
+  customerId: string;
+  amount: number;
+  status: string;
+  method: string;
+  paidAt: string | null;
+  createdAt: string;
+}
+
+
+export enum PaymentStatus {
+  PENDING="PENDING",
+  PAID="PAID",
+  CANCELLED="CANCELLED"
 }

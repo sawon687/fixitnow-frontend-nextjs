@@ -1,7 +1,10 @@
 "use server";
 
-import { imageBBLinkConvert } from '../../../../utils/imageLinkConvert';
-import { TState } from "../../../../utils/type";
+import { cookies } from "next/headers";
+import { imageBBLinkConvert } from "../../../../utils/imageLinkConvert";
+import { IRole, TState } from "../../../../utils/type";
+import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export const registerAction = async (stack: TState, formData: FormData) => {
   const name = formData.get("name")?.toString();
@@ -11,7 +14,7 @@ export const registerAction = async (stack: TState, formData: FormData) => {
 
   const profilePhotoFile = formData.get("photo") as File | null;
 
-console.log('photo file',profilePhotoFile)
+  console.log("photo file", profilePhotoFile);
   // =========================
   // Upload Image to ImgBB
   // =========================
@@ -49,6 +52,26 @@ console.log('photo file',profilePhotoFile)
   if (!result.success) {
     return result;
   }
+
+  const cookieStore = await cookies();
+  cookieStore.set("accessToken", result.data.accessToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24, // 24 hour or 1 day
+  });
+
+  cookieStore.set("refreshToken", result.data.refreshToken, {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 24 hour or 7 day
+  });
+
+ if(result.success)
+ {
+  redirect('/auth/register')
+ }
 
   return result;
 };

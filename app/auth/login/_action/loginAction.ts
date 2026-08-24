@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { IRole, TState } from '../../../../utils/type'
+import { revalidatePath } from 'next/cache'
 
 
 export const loginAction = async (prevState:TState,fromdata: FormData) => {
@@ -50,7 +51,10 @@ export const loginAction = async (prevState:TState,fromdata: FormData) => {
             maxAge:60 * 60 * 24 * 7// 24 hour or 7 day
        })
 
-
+      if(result.success)
+      {
+           redirect('/auth/login')
+      }
        return result
 
 }

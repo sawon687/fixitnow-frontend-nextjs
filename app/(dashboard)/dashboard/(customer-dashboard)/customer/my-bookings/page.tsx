@@ -1,12 +1,25 @@
 import React from "react";
 import Link from "next/link";
 import { BookingParams, getmyBookings } from "./_actions/bookingsActions";
-import { ArrowLeft, Calendar, ChevronRight, Clock, MapPin, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  Calendar,
+  ChevronRight,
+  Clock,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "../../../../../../components/ui/button";
 import FiltaringBookings from "./_components/FiltaringBookings";
 import { SearchParams } from "next/dist/server/request/search-params";
-import BookingStatusColor from '../../../../../../components/shared/BookingStatusColor';
-import { formatTime } from '../../../../../../utils/timeFormate';
+import BookingStatusColor from "../../../../../../components/shared/BookingStatusColor";
+import { formatTime } from "../../../../../../utils/timeFormate";
+import {
+  BookingStatus,
+  IBooking,
+  PaymentStatus,
+} from "../../../../../../utils/type";
 
 const MyBookingspage = async ({ searchParams }: SearchParams) => {
   const params = (await searchParams) as BookingParams | undefined;
@@ -14,13 +27,11 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
 
   const res = await getmyBookings(params || ({} as BookingParams));
   const bookings = res.data || [];
-  
 
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-12">
       <div className="max-w-5xl mx-auto space-y-8">
-        
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
           <div className="space-y-1">
@@ -32,7 +43,8 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
               My Bookings
             </h1>
             <p className="text-sm text-slate-400">
-              Manage and track all your active and previous service bookings in one place.
+              Manage and track all your active and previous service bookings in
+              one place.
             </p>
           </div>
 
@@ -65,7 +77,11 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
               </p>
             </div>
           ) : (
-            bookings.map((booking: any) => (
+            bookings.map((booking: IBooking) => {
+              const payment = booking?.payment;
+              
+              return (
+              
               <div
                 key={booking.id}
                 className="group relative overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl shadow-teal-950/20 hover:border-teal-500/40 transition-all space-y-4"
@@ -75,10 +91,13 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-1">
                     <h3 className="text-lg font-black text-white group-hover:text-teal-300 transition-colors">
-                      {booking.serviceTitle}
+                      {booking.service.title}
                     </h3>
                     <p className="text-xs text-slate-400">
-                      Technician: <span className="text-slate-200 font-semibold">{booking.technicianName}</span>
+                      Technician:{" "}
+                      <span className="text-slate-200 font-semibold">
+                        {booking.technician?.users?.name}
+                      </span>
                     </p>
                   </div>
                   <div>
@@ -92,7 +111,9 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
                       <Calendar className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase text-slate-500 font-bold">Scheduled Date</p>
+                      <p className="text-[10px] uppercase text-slate-500 font-bold">
+                        Scheduled Date
+                      </p>
                       <p className="font-semibold">{booking.scheduledDate}</p>
                     </div>
                   </div>
@@ -102,8 +123,12 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
                       <Clock className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase text-slate-500 font-bold">Time Slot</p>
-                      <p className="font-semibold">{formatTime(booking.startTime)}</p>
+                      <p className="text-[10px] uppercase text-slate-500 font-bold">
+                        Time Slot
+                      </p>
+                      <p className="font-semibold">
+                        {formatTime(booking.startTime)}
+                      </p>
                     </div>
                   </div>
 
@@ -112,15 +137,21 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div className="truncate">
-                      <p className="text-[10px] uppercase text-slate-500 font-bold">Location</p>
-                      <p className="font-semibold truncate">{booking.address}</p>
+                      <p className="text-[10px] uppercase text-slate-500 font-bold">
+                        Location
+                      </p>
+                      <p className="font-semibold truncate">
+                        {booking.address}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Total Amount: </span>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                      Total Amount:{" "}
+                    </span>
                     <span className="text-base font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300">
                       ৳{booking.totalAmount}
                     </span>
@@ -128,20 +159,23 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
 
                   {/* Action Buttons: Pay Now & Details */}
                   <div className="flex items-center gap-2">
-                    {booking.status === "ACCEPTED" && (
-                      <Link href={`/dashboard/customer/my-bookings/${booking.id}/pay`}>
-                        <Button
-                          size="sm"
-                          className="bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 font-bold hover:opacity-90 text-xs cursor-pointer shadow-lg shadow-teal-500/20"
+                    {booking.status === BookingStatus.ACCEPTED &&
+                      payment?.status !== PaymentStatus.PAID && (
+                        <Link
+                          href={`/dashboard/customer/my-bookings/${booking.id}/pay`}
                         >
-                          Pay Now
-                        </Button>
-                      </Link>
-                    )}
+                          <Button
+                            size="sm"
+                            className="bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 font-bold hover:opacity-90 text-xs cursor-pointer shadow-lg shadow-teal-500/20"
+                          >
+                            Pay Now
+                          </Button>
+                        </Link>
+                      )}
 
-                    
-
-                    <Link href={`/dashboard/customer/my-bookings/${booking.id}`}>
+                    <Link
+                      href={`/dashboard/customer/my-bookings/${booking.id}`}
+                    >
                       <Button
                         variant="ghost"
                         size="sm"
@@ -153,9 +187,8 @@ const MyBookingspage = async ({ searchParams }: SearchParams) => {
                     </Link>
                   </div>
                 </div>
-
               </div>
-            ))
+            )})
           )}
         </div>
       </div>

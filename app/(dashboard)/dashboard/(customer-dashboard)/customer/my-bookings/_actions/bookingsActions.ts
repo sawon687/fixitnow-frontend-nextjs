@@ -20,7 +20,7 @@ export const getmyBookings=async(params:BookingParams)=>{
   })
 
   const result=await res.json()
-     console.log('booking',result)
+    
   return result
 }
 
