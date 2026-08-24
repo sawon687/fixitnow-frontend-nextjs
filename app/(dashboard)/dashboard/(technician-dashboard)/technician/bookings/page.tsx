@@ -155,7 +155,7 @@ const BookingAllpage = async () => {
                     </TableCell>
 
                     {/* ================= ACTIONS ================= */}
-                    <UpdateStatus payment={payment} booking={booking} />
+                    <UpdateStatus booking={booking} />
                   </TableRow>
                 );
               })

@@ -32,7 +32,10 @@ export default async function TechnicianProfilePage({
     ? Number(technician.avgRating).toFixed(1)
     : "New";
 
-  const reviews = technician?.reviewsCount || 0;
+  const reviews =
+    technician && "reviewsCount" in technician
+      ? Number(technician.reviewsCount) || 0
+      : 0;
 
   return (
     <main className="min-h-screen bg-[#070b10] text-white">

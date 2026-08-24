@@ -41,7 +41,11 @@ const BookingDetailsPage = async ({
   const payment = booking?.payment;
 
   // Review is an array
-  const reviews: IReview[] = booking?.review || [];
+  const reviews: IReview[] = Array.isArray(booking?.review)
+    ? booking.review
+    : booking?.review
+      ? [booking.review]
+      : [];
 
   const latestReview = reviews.length > 0 ? reviews[0] : null;
 
@@ -631,7 +635,7 @@ const BookingDetailsPage = async ({
 
                 {booking.status ===
                   "COMPLETED" &&
-                  reviews.length === 0 && (
+                  reviews.length=== 0 && (
                     <ReviewModal
                       bookingId={booking.id}
                       technicianId={

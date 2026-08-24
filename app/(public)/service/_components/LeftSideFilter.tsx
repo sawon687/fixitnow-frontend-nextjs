@@ -50,7 +50,7 @@ const insialocation=params.get('location') || "All"
       params.set("category", selectedCategory);
     }
      
-    if (selectRating && selectRating !== priceulr && selectRating > 0) {
+    if (selectRating && selectRating !== priceulr && Number(selectRating) > 0) {
       params.set("rating", selectRating.toString());
     }
 

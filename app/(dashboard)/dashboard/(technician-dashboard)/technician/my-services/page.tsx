@@ -47,7 +47,7 @@ const MyServices = async () => {
   const totalServices = servicesData.length;
 
   const activeServices = servicesData.filter(
-    (service) => service.isActive
+    (service: IService) => service.isActive
   ).length;
 
   const inactiveServices = totalServices - activeServices;
@@ -83,7 +83,7 @@ const MyServices = async () => {
             </p>
           </div>
 
-          <CreateServiceDialog />
+          <CreateServiceDialog isEdit={false} />
         </div>
 
         {/* =====================================================

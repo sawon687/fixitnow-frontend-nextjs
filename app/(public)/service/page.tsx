@@ -50,7 +50,7 @@ export default async function ServicesPage({
      FILTER DATA
   ====================================================== */
 
-  const location = locations.map((l) => l.location);
+  const location = locations.map((l: { location: string }) => l.location);
 
   const categoryNames = category.map(
     (c: ICategory) => c.name

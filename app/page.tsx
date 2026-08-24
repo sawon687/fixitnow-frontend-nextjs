@@ -394,7 +394,7 @@ export default async function HomePage() {
                 Explore:
               </span>
 
-              {categoryNames.slice(0, 8).map((name) => (
+              {categoryNames.slice(0, 8).map((name: string) => (
                 <Link
                   key={name}
                   href={`/service?category=${name}`}

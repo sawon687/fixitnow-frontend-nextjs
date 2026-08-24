@@ -1,8 +1,9 @@
 // components/AnimatedBox.jsx
 'use client' // এটি আবশ্যিক
 import { motion } from 'framer-motion'
+import type { ReactNode } from 'react'
 
-export default function AnimatedBox({children}) {
+export default function AnimatedBox({ children }: { children: ReactNode }) {
   return (
      <motion.div
            initial={{ opacity: 0, y: 10 }}

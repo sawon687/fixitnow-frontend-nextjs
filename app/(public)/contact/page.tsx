@@ -370,7 +370,7 @@ function ContactInfo({
   title,
   value,
 }: {
-  icon: React.ReactNode;
+  icon: React.ReactElement<{ className?: string }>;
   title: string;
   value: string;
 }) {
@@ -409,7 +409,7 @@ function ContactInfo({
           group-hover:bg-emerald-500/[0.14]
         "
       >
-        {React.cloneElement(icon as React.ReactElement, {
+        {React.cloneElement(icon, {
           className: "h-[17px] w-[17px]",
         })}
       </div>
