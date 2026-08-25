@@ -46,8 +46,8 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 
 | Page (Route) | Feature | API Consumption |
 |---|---|---|
-| `/dashboard/technician` | Technician overview & stats | `GET /api/technician/dashboard`, `GET /api/auth/me` |
-| `/dashboard/technician/my-profile` | View/create/update technician profile | `GET /api/technician/profile`, `POST /api/technician/profile`, `PATCH /api/technician/profile` |
+| `/dashboard/technician` | Technician overview & stats | `GET /api/technician/dashboard` |
+| `/dashboard/technician/my-profile` | View/create/update technician profile | `GET /api/auth/me`, `POST /api/technician/profile`, `PATCH /api/technician/profile-update` |
 | `/dashboard/technician/my-services` | List/create technician's services | `GET /api/technician/services`, `POST /api/technician/services`, `GET /api/categories` |
 | `/dashboard/technician/my-services/[id]` | Update/delete a service | `GET /api/technician/services/:id`, `PATCH /api/technician/services/:id`, `DELETE /api/technician/services/:id` |
 | `/dashboard/technician/availability` | Manage availability slots | `GET /api/technician/availability`, `POST /api/technician/availability`, `PATCH /api/technician/availability/:id`, `DELETE /api/technician/availability/:id` |
