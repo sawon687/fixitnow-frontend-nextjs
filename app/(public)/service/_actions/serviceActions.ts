@@ -57,7 +57,7 @@ export const getAllService = async (
 
   const result = await res.json();
 
-
+ 
 
   return result.data;
 };

@@ -9,6 +9,7 @@ const verifyToken=(token:string,secret:string)=>{
         }
     } catch (error:any) {
            console.log('Token verifed falied',error)
+           
         return {
          
             success:false,
