@@ -51,7 +51,7 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 | `/dashboard/technician/my-services` | List/create technician's services | `GET /api/technician/my-service`, `POST /api/services`, `GET /api/categories` |
 | `/dashboard/technician/my-services/[id]` | Update/ a service | `GET /api/technician/services/:id`, `PATCH /api/update-service/:id, GET /api/categories`,  |
 | `/dashboard/technician/availability` | Manage availability slots | `GET /api/technician/availability`, `POST /api/technician/availability`, `PUT/api/technician/availability` |
-| `/dashboard/technician/bookings` | Manage incoming bookings | `GET /api/technician/bookings`, `PATCH /api/bookings/:id/status` |
+| `/dashboard/technician/bookings` | Manage incoming bookings | `GET /api/technician/bookings`, `PATCH /api/technician/bookings/:id` |
 
 ---
 /api/technician/my-service
@@ -59,10 +59,10 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 
 | Page (Route) | Feature | API Consumption |
 |---|---|---|
-| `/dashboard/admin` | Admin overview & platform statistics | `GET /api/admin/dashboard`, `GET /api/admin/users`, `GET /api/admin/bookings`, `GET /api/admin/payments` |
-| `/dashboard/admin/users` | Manage users (search, ban/unban) | `GET /api/admin/users`, `PATCH /api/admin/users/:id/status` |
-| `/dashboard/admin/category-management` | Manage service categories | `GET /api/categories`, `POST /api/categories`, `PATCH /api/categories/:id`, `DELETE /api/categories/:id` |
-| `/dashboard/admin/my-profile` | View/update admin profile | `GET /api/auth/me`, `PATCH /api/users/profile` |
+| `/dashboard/admin` | Admin overview & platform statistics | `GET /api/admin/dashboard` |
+| `/dashboard/admin/users` | Manage users (search, ban/unban) | `GET /api/admin/users?search=${search}&page=${page}`, `PATCH /api/admin/users/:id` |
+| `/dashboard/admin/category-management` | Manage service categories | `GET /api/admin/categories?search=${search}`, `/api/admin/categories`, `PATCH /api/admin/categories/${id}` |
+| `/dashboard/admin/my-profile` | View  admin profile | `GET /api/auth/me`, |
 
 ---
 
