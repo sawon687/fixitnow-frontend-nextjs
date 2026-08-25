@@ -71,34 +71,10 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 - Booking status values: `REQUESTED`, `ACCEPTED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`.
 - Payment outcome pages read the Stripe session/URL params for immediate UI feedback, but final confirmation should rely on a backend Stripe webhook, not the frontend alone.
 - Admin routes (`/api/admin/*`) must be protected so only authenticated admin-role users can call them.
-- `GET /api/technicians?serviceId=:id` and `GET /api/services?search=...` are query-parameter variants of their base endpoints, not separate routes.
+- `/api/technician/services/:id` and `GET /api/services?search=...` are query-parameter variants of their base endpoints, not separate routes.
 
 ---
 
-## Recommended Frontend Structure
 
-Centralize all fetch logic in service files rather than inside components:
-
-```text
-src/
-├── services/
-│   ├── auth/auth.service.ts
-│   ├── booking/booking.service.ts
-│   ├── service/service.service.ts
-│   ├── technician/technician.service.ts
-│   ├── payment/payment.service.ts
-│   ├── review/review.service.ts
-│   └── category/category.service.ts
-│
-└── app/
-    ├── auth/
-    ├── service/
-    ├── technicians/
-    ├── payment/
-    └── dashboard/
-        ├── customer/
-        ├── technician/
-        └── admin/
-```
 
 Each `*.service.ts` file should export typed functions (e.g. `getMyBookings()`, `createPayment()`) that wrap `fetch`/`axios` calls to `NEXT_PUBLIC_API_URL`, so components only ever call a service function — never `fetch` directly.
