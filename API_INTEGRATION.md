@@ -19,14 +19,11 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 | `/about` | Static about page | No API call |
 | `/contact` | Contact form | `POST /api/contact` |
 | `/service` | Browse & filter services | `GET /api/services`, `GET /api/categories`, `GET /api/services?search=...` |
-| `/service/[id]` | Service details & related technicians | `GET /api/services/:id`, `GET /api/technicians?serviceId=:id` |
-| `/services` | Browse & filter services/technicians | `GET /api/services`, `GET /api/technicians`, `GET /api/categories` |
-| `/technicians/[id]` | Technician profile & booking CTA | `GET /api/technicians/:id` |
+| `/service/[id]` | Service details & related technicians | `GET /api/services/:id` |
 | `/auth/register` | Role selection & registration form | `POST /api/auth/register` |
-| `/auth/login` | Login form | `POST /api/auth/login` |
-| Global auth/session handling | Get current authenticated user | `GET /api/auth/me` |
-| Logout action | Clear session/token | `POST /api/auth/logout` |
-| `/payment/success` | Payment success outcome page | `GET /api/payments/verify` |
+| `/auth/login` | Login form | `POST /api/auth/login` 
+| Logout action | Clear session/token | remove session singOUt() function call |
+| `/payment/success` | Payment success outcome page | `GET /api/payments/confirm` |
 | `/payment/cancel` | Payment cancelled outcome page | No API call (UI from URL params) |
 
 ---
@@ -35,13 +32,13 @@ NEXT_PUBLIC_API_URL=https://your-backend-domain.com
 
 | Page (Route) | Feature | API Consumption |
 |---|---|---|
-| `/dashboard/customer` | Customer overview & booking history | `GET /api/auth/me`, `GET /api/bookings/my-bookings`, `GET /api/payments/history` |
-| `/dashboard/customer/my-profile` | View/update customer profile | `GET /api/auth/me`, `PATCH /api/users/profile` |
-| `/dashboard/customer/my-bookings` | List customer's bookings (filterable by status) | `GET /api/bookings/my-bookings` |
+| `/dashboard/customer` | Customer overview & booking history | `GET /api/customer/dashboard` |
+| `/dashboard/customer/my-profile` | View/update customer profile | `GET  /api/auth/me` |
+| `/dashboard/customer/my-bookings` | List customer's bookings (filterable by status) | `/api/bookings?status=${status} |
 | `/dashboard/customer/my-bookings/[id]` | Booking details & review submission | `GET /api/bookings/:id`, `POST /api/reviews` |
 | `/dashboard/customer/bookings/[id]/pay` | Payment initiation page | `GET /api/bookings/:id`, `POST /api/payments/create` |
-| `/dashboard/customer/my-reviews` | View/create customer reviews | `GET /api/reviews/my-reviews`, `POST /api/reviews` |
-| `/dashboard/customer/payments-history` | Customer payment history | `GET /api/payments/history` |
+| `/dashboard/customer/my-reviews` | View/create customer reviews | `GET /api/reviews` |
+| `/dashboard/customer/payments-history` | Customer payment history | `GET /api/payments` |
 
 ---
 
