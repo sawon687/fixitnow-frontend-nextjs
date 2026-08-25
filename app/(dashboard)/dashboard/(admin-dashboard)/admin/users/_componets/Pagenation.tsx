@@ -64,7 +64,7 @@ useEffect(() => {
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={()=> setCurrentPage(currentPage - 1)}
-                    disabled={currentPage < 1}
+                    disabled={currentPage <= 1}
                     className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.02] text-slate-500 transition hover:border-white/[0.14] hover:bg-white/[0.05] hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
                   >
                     <ChevronLeft size={16} />

@@ -38,8 +38,9 @@ const navlink = {
       icon: Tags,
     },
     {
+      
       name: "My Profile",
-      path: "/dashboard/technician/profile",
+      path: "/dashboard/admin/my-profile",
       icon: User,
     },
   ],

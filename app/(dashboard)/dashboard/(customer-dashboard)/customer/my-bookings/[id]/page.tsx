@@ -46,11 +46,12 @@ const BookingDetailsPage = async ({
     : booking?.review
       ? [booking.review]
       : [];
-
+         
+      console.log('reviews sawon cutoemr',reviews.length)
   const latestReview = reviews.length > 0 ? reviews[0] : null;
 
   const isPaid = payment?.status === PaymentStatus.PAID;
-
+   
   const paymentStatus =
     payment?.status || PaymentStatus.PENDING;
 
@@ -635,7 +636,7 @@ const BookingDetailsPage = async ({
 
                 {booking.status ===
                   "COMPLETED" &&
-                  reviews.length=== 0 && (
+                  reviews.length === 0 && (
                     <ReviewModal
                       bookingId={booking.id}
                       technicianId={

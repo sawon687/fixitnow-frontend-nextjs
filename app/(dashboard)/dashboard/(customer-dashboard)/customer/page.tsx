@@ -74,43 +74,10 @@ const recentBookings = [
 ];
 
 
-const reviews = [
-  {
-    service: "Plumbing & Pipe Repair",
-    technician: "Sakib Hossain",
-    rating: 5,
-    comment:
-      "Excellent service. Very professional and arrived on time.",
-    date: "Aug 18, 2026",
-  },
-  {
-    service: "AC Repair & Servicing",
-    technician: "Rahim Ahmed",
-    rating: 5,
-    comment:
-      "Great experience. The technician was very helpful.",
-    date: "Aug 12, 2026",
-  },
-];
 
 
-// ======================================================
-// PAGE
-// ======================================================
-// dashbaord {
-//   success: true,
-//   status: 201,
-//   message: 'dashboard data found',
-//   data: {
-//     totalBookingCount: 3,
-//     activeBookingCount: 1,
-//     completeBookingCoun: 2,
-//     bookingInfo: { _sum: [Object], _count: 1 },
-//     pendingAmount: [ [Object], [Object], [Object] ],
-//     cancelledPayment: { _sum: [Object], _count: 0 },
-//     review: { _sum: [Object], _count: 0 }
-//   }
-// }
+
+
 export default async function CustomerDashboardpage() {
 const  data=await getCustomerDashboard()
 console.log('data',data)
@@ -127,7 +94,7 @@ const {totalBookingCount,
   const stats = [
   {
     title: "Total Bookings",
-    value: totalBookingCount,
+    value: totalBookingCount||0,
     description: "All time bookings",
     icon: CalendarDays,
     trend: "+12.5%",
@@ -136,7 +103,7 @@ const {totalBookingCount,
   },
   {
     title: "Active Bookings",
-    value: activeBookingCount,
+    value: activeBookingCount||0,
     description: "Currently active",
     icon: Clock3,
     trend: "+2 this week",
@@ -154,7 +121,7 @@ const {totalBookingCount,
   },
   {
     title: "Total Spent",
-    value: `৳${paymentPaid?._sum?.amount}`,
+    value: `৳${paymentPaid?._sum?.amount||0}`,
     description: "Across all services",
     icon: Wallet,
     trend: "+৳4,200",
