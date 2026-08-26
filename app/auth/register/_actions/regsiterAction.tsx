@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 import { imageBBLinkConvert } from "../../../../utils/imageLinkConvert";
-import { IRole, TState } from "../../../../utils/type";
+import {  TState } from "../../../../utils/type";
 import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
+
 
 export const registerAction = async (stack: TState, formData: FormData) => {
   const name = formData.get("name")?.toString();

@@ -6,6 +6,7 @@ import {  ShieldCheck,  Cpu, Wrench, Sparkles } from 'lucide-react';
 import { Card,} from "@/components/ui/card";
 import AnimatedBox from '../../../components/shared/AnimatedBox';
 import RegisterFrom from './_components/RegisterFrom';
+import BackButton from '../../../components/shared/BackButton';
 
 
 
@@ -15,6 +16,9 @@ const RegisterPage = () => {
   return (
     <div className="h-screen w-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 lg:p-6 overflow-hidden relative">
       {/* Background Aura Ambient Glows */}
+     <div className="absolute top-6 left-6 lg:top-8 lg:left-8 z-50">
+  <BackButton href="/" />
+</div>
       <div className="absolute top-1/4 -left-32 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
 

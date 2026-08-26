@@ -2,10 +2,13 @@ import React from 'react'
 import LoginFrom from './_components/LoginForm'
 import { Button } from '../../../components/ui/button'
 import Link from 'next/link'
+import Logo from '../../../components/shared/Logo'
+import BackButton from '../../../components/shared/BackButton'
 
 const LoginPage = () => {
   return (
     <div className='flex justify-center items-center '>
+
 <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 bg-background">
       {/* Left Column: Modernized Form Section */}
       <div className="flex items-center justify-center py-12 px-6 sm:px-10 lg:px-16 relative overflow-hidden">
@@ -18,15 +21,11 @@ const LoginPage = () => {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-bold shadow-lg shadow-emerald-500/25">
               🔧
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-base tracking-tight">FixItNow</span>
-              <span className="text-[11px] text-muted-foreground">
-                Home Service Platform
-              </span>
-            </div>
+             <Logo></Logo>
           </div>
 
           <div className="grid gap-2.5 text-center lg:text-left">
+            <BackButton href={'/'}></BackButton>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-xs font-semibold w-fit mx-auto lg:mx-0">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
               Secure Portal
