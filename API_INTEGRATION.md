@@ -6,7 +6,7 @@ This document maps every FixItNow frontend route to the backend API endpoint(s) 
 
 **Base URL (env variable):**
 ```
-NEXT_PUBLIC_API_URL=https:[//your-backend-domain.com](https://fixit-now-woad.vercel.app/)
+NEXT_PUBLIC_API_URL=https:https://fixit-now-woad.vercel.app
 ```
 
 ---
