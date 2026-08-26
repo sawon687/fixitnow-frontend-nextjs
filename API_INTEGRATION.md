@@ -2,7 +2,7 @@
 
 ## Project: FixItNow Frontend
 
-This document maps every FixItNow frontend route to the backend API endpoint(s) it consumes, grouped by section (Public, Customer, Technician, Admin).
+FixItNow is a modern home services marketplace frontend built with Next.js, TypeScript, Tailwind CSS, and React. The platform connects customers with technicians/service providers for home maintenance and repair services.
 
 **Base URL (env variable):**
 ```
